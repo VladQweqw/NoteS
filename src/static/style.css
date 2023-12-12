@@ -30,4 +30,109 @@ body {
   font-family: "Poppins", sans-serif;
   background-color: #181818;
   color: #FFF;
+}
+
+.no-data-text {
+  color: rgba(255, 255, 255, 0.5019607843);
+}
+
+.svg {
+  width: 25px;
+  height: 25px;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 325px 1fr;
+  gap: 1rem;
+  padding: 0;
+}
+.main .sidebar {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100%;
+  gap: 0.5rem;
+}
+.main .sidebar .top-sidebar, .main .sidebar .notes {
+  background-color: #202020;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+.main .sidebar .top-sidebar {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  gap: 1rem;
+}
+.main .sidebar .top-sidebar .search-wrapper {
+  width: 100%;
+}
+.main .sidebar .top-sidebar .search-wrapper #search-field {
+  background-color: #181818;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  color: #FFF;
+  text-align: center;
+}
+.main .sidebar .sidebar-options {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.main .sidebar .sidebar-options .svg {
+  cursor: pointer;
+  transition: 200ms ease;
+}
+.main .sidebar .sidebar-options .svg path {
+  transition: 200ms ease;
+}
+.main .sidebar .sidebar-options .svg:hover path {
+  stroke: rgba(255, 255, 255, 0.5019607843);
+}
+.main .sidebar .sidebar-options .svg:active {
+  scale: 0.75;
+}
+.main .sidebar .notes {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.main .sidebar .notes .note {
+  width: 100%;
+  background-color: #181818;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  text-align: center;
+  transition: 300ms ease-in-out;
+}
+.main .sidebar .notes .note .note-name {
+  font-weight: 400;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5019607843);
+}
+.main .sidebar .notes .note:hover {
+  background-color: #2A1E44;
+}
+.main .sidebar .notes .note-active {
+  background-color: #4B2B8E;
+}
+.main .sidebar .notes .note-active .note-name {
+  color: #FFF;
+}
+.main .notes::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.note-content {
+  border: 1px solid;
 }/*# sourceMappingURL=style.css.map */
