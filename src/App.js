@@ -136,7 +136,6 @@ function App() {
 
 const NoteContent = forwardRef(function(props, ref) {
   const [text, setText] = useState(props.note.title)
-  const [currentColor, setCurrentColor] = useState('#fff')
 
   useEffect(() => {
     setText(props.note.title)
@@ -172,19 +171,16 @@ const NoteContent = forwardRef(function(props, ref) {
       </div>
 
       <div className="header-options">
-          <input onBlur={() => {
+          <input onBlur={(e) => {
             let tr = window.getSelection().getRangeAt(0);
-            tr.innerHTML = ``
             let span = document.createElement("span");
-            span.style.color = currentColor;
+            span.style.color = e.target.value;
             span.appendChild(tr.extractContents());
             tr.insertNode(span)
           
             
 
-          }} type="color" className='input color-input' id="current-color" onChange={(e) => {
-            setCurrentColor(e.target.value)
-          }} name="Text color" />
+          }} type="color" className='input color-input' id="current-color" name="Text color" />
 
           <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
             <g clipPath="url(#clip0_29_66)">
