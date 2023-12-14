@@ -1,39 +1,21 @@
 import { forwardRef , useState, useEffect, useRef } from 'react';
-
+import { getNewName, syncFiles } from './assets/functions';
 // Syles
 import './static/style.css'
 
 const fs = window.require('fs')
-const pathModule = window.require('path')
-
-const initialNotes = [
-  {
-    title: 'Sandu',
-    text: 'AWD',
-  },
-  {
-    title: 'Ionut',
-    text: 'sugi pula ionut',
-  },
-  {
-    title: 'Danutu',
-    text: 'Ba <i>CAL<i> in el lmc <c class="accent">ma</c> rupe maine',
-  },
-  {
-    title: 'Bodorineeee',
-    text: 'sugi pula ionut',
-  },
-]
 
 function App() {
-  const [notes, setNotes] = useState(initialNotes)
+  const INITIAL_NOTES = syncFiles()
+
+  const [notes, setNotes] = useState(INITIAL_NOTES)
   const [currentIndex, setCurrentIndex] = useState(0)
   const textArea = useRef(null)
 
   function searchNotes(search) {
-    if(search.trim() === '') return setNotes(initialNotes)
+    if(search.trim() === '') return setNotes(INITIAL_NOTES)
     const keyword = search.toLowerCase()
-    const notesCopy = initialNotes
+    const notesCopy = INITIAL_NOTES
 
     const filteredNotes = notesCopy.filter((note) => {
       const noteTitle = note.title.toLocaleLowerCase()
@@ -43,7 +25,55 @@ function App() {
 
     setNotes(filteredNotes)
   }
-  
+
+  function createNote() {
+
+    fs.appendFile(`./notes/${getNewName()}.txt`, '', function(err) {
+      if(err) throw err;
+      console.log('Created succesfully!');
+      
+      setNotes(syncFiles())
+    })
+    
+  }
+
+  function saveNoteContent(file_path, new_content) {
+    try {
+      fs.writeFileSync(file_path, new_content)
+      console.log('Saved succesfully!')
+      
+      setNotes(syncFiles())
+    }
+    catch(err) {
+      console.log(err);
+    }
+
+  }
+
+  function saveNoteTitle(file_path, new_title) {
+    try {
+      fs.rename(`notes/${file_path}.txt`, `notes/${new_title}.txt`, () => {
+        console.log('Saved succesfully!')
+      
+        setNotes(syncFiles())
+      })
+    }
+    catch(err) {
+      console.log(err);
+    }
+  }
+
+  function removeNote(file_path) {
+    try {
+      fs.unlinkSync(file_path);
+      console.log('Removed succesfully!');
+
+      setNotes(syncFiles())
+    }catch(err) {
+      console.log(`Error: ${err}`);
+    }
+
+  }
 
   useEffect(() => {
     if(textArea.current)
@@ -58,7 +88,6 @@ function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex])
-  
 
   return (
     <main className="main">
@@ -87,13 +116,7 @@ function App() {
             </span>
 
             <span onClick={() => {
-              setNotes([
-                ...notes, 
-                {
-                  title: 'Sandu',
-                  text: 'HAHDWH',
-                }
-              ])
+              createNote()
             }} className="filter">
               <svg className='svg' viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_11_14244)">
@@ -115,7 +138,7 @@ function App() {
  
         <div className="bottom-sidebar notes" id='notes'>
             {notes.length > 0 ? notes?.map((note, index) => {
-              return <Note setCurrentIndex={setCurrentIndex} index={index} class={
+              return <Note removeNote={removeNote} setCurrentIndex={setCurrentIndex} index={index} class={
                 `${index === 0 ? 'note-active' : ''}`
               } note={note} key={index} />
             }):  <p className='no-data-text'>Create a note</p>}
@@ -123,10 +146,8 @@ function App() {
       </div>
 
       <article className="note-content-wrapper"> 
-          {notes[currentIndex]?.text ? 
-            <NoteContent ref={textArea} note={notes[currentIndex]} />
-          : <p className='no-data-text'>Nothing here yet, click on a note or create one to start</p>  
-        }
+        {notes.length > 0 && notes[currentIndex] && 
+            <NoteContent saveNoteTitle={saveNoteTitle} saveNoteContent={saveNoteContent} ref={textArea} note={notes[currentIndex]} />}
       </article> 
 
     </main>
@@ -152,8 +173,8 @@ const NoteContent = forwardRef(function(props, ref) {
         className="note-title" 
         value={text}
         onChange={handleChange}
-        onBlur={() => {
-        // saveTitle()
+        onBlur={(e) => {
+          props.saveNoteTitle(`${props.note.title}`, `${e.target.value}`)
       }}
       ></input>
         <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 23 23" fill="none">
@@ -178,8 +199,6 @@ const NoteContent = forwardRef(function(props, ref) {
             span.appendChild(tr.extractContents());
             tr.insertNode(span)
           
-            
-
           }} type="color" className='input color-input' id="current-color" name="Text color" />
 
           <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
@@ -199,16 +218,23 @@ const NoteContent = forwardRef(function(props, ref) {
           </svg>
       </div>
     </header>
-    <pre id="note-content" ref={ref} contentEditable></pre>
+    <pre onBlur={(e) => {
+      props.saveNoteContent(`notes/${props.note.title}.txt`, e.target.innerHTML)
+    }} id="note-content" ref={ref} contentEditable></pre>
   </>
 })
 
 function Note(data) {
   return(
-    <div onClick={(e) => {
+    <div
+    onDoubleClick={(e) => {
+      data.removeNote(`notes/${data.note.title}.txt`)
+    }}
+     onClick={(e) => {
       data.setCurrentIndex(data.index)
       
-    }} className={`note ${data.class}`}>
+    }} 
+    className={`note ${data.class}`}>
       <p className='note-name'>{data.note.title}</p>
     </div>
   )
