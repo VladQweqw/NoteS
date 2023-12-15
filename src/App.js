@@ -1,5 +1,7 @@
 import { forwardRef , useState, useEffect, useRef } from 'react';
 import { getNewName, syncFiles } from './assets/functions';
+import Context from './hooks/context';
+
 // Syles
 import './static/style.css'
 
@@ -10,6 +12,11 @@ function App() {
 
   const [notes, setNotes] = useState(INITIAL_NOTES)
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [contextData, setContextData] = useState({
+    top: 0,
+    left: 0,
+    isOpen: false
+  })
   const textArea = useRef(null)
 
   function searchNotes(search) {
@@ -27,7 +34,6 @@ function App() {
   }
 
   function createNote() {
-
     fs.appendFile(`./notes/${getNewName()}.txt`, '', function(err) {
       if(err) throw err;
       console.log('Created succesfully!');
@@ -53,9 +59,9 @@ function App() {
   function saveNoteTitle(file_path, new_title) {
     try {
       fs.rename(`notes/${file_path}.txt`, `notes/${new_title}.txt`, () => {
-        console.log('Saved succesfully!')
-      
-        setNotes(syncFiles())
+        console.log('Saved succesfully! - TItle')
+        console.log(syncFiles());
+        setNotes(() => syncFiles())
       })
     }
     catch(err) {
@@ -138,25 +144,37 @@ function App() {
  
         <div className="bottom-sidebar notes" id='notes'>
             {notes.length > 0 ? notes?.map((note, index) => {
-              return <Note removeNote={removeNote} setCurrentIndex={setCurrentIndex} index={index} class={
+              return <Note 
+              setContextData={setContextData}
+              removeNote={removeNote} 
+              setCurrentIndex={setCurrentIndex} 
+              index={index} 
+              saveNoteTitle={saveNoteTitle} 
+              class={
                 `${index === 0 ? 'note-active' : ''}`
-              } note={note} key={index} />
-            }):  <p className='no-data-text'>Create a note</p>}
+              } 
+              note={note} 
+              key={index} />
+            }):<p className='no-data-text'>Create a note</p>}
         </div>
       </div>
 
       <article className="note-content-wrapper"> 
         {notes.length > 0 && notes[currentIndex] && 
-            <NoteContent saveNoteTitle={saveNoteTitle} saveNoteContent={saveNoteContent} ref={textArea} note={notes[currentIndex]} />}
+            <NoteContent 
+            saveNoteTitle={saveNoteTitle} 
+            saveNoteContent={saveNoteContent} 
+            ref={textArea} 
+            note={notes[currentIndex]} />}
       </article> 
-
+        <Context contextData={contextData} />
     </main>
   );
 }
 
-
 const NoteContent = forwardRef(function(props, ref) {
   const [text, setText] = useState(props.note.title)
+  const [isTextWrap, setIsTextWrap] = useState(false)
 
   useEffect(() => {
     setText(props.note.title)
@@ -216,26 +234,88 @@ const NoteContent = forwardRef(function(props, ref) {
     </clipPath>
   </defs>
           </svg>
+
+          {
+            isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_7_14260)">
+              <path d="M4 6H14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 18H14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 12H21L18 9M18 15L21 12" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_7_14260">
+              <rect width="24" height="24" fill="white"/>
+              </clipPath>
+              </defs>
+            </svg>
+            :
+            <svg onClick={() => setIsTextWrap(true)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_7_16520)">
+                <path d="M4 6H20" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 18H9" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 12H17C17.7956 12 18.5587 12.3161 19.1213 12.8787C19.6839 13.4413 20 14.2044 20 15C20 15.7956 19.6839 16.5587 19.1213 17.1213C18.5587 17.6839 17.7956 18 17 18H13L15 16M15 20L13 18" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </g>
+                <defs>
+                <clipPath id="clip0_7_16520">
+                <rect width="24" height="24" fill="white"/>
+                </clipPath>
+                </defs>
+            </svg>
+          }
       </div>
     </header>
-    <pre onBlur={(e) => {
+    <pre
+    className={`${isTextWrap ? 'note-content-wrap' : ''}`}
+    onBlur={(e) => {
       props.saveNoteContent(`notes/${props.note.title}.txt`, e.target.innerHTML)
     }} id="note-content" ref={ref} contentEditable></pre>
   </>
 })
 
 function Note(data) {
+  const [title, setTitle] = useState(data.note.title)
+
+  useEffect(() => {
+    setTitle(data.note.title)
+  }, [data.note.title])
+  
   return(
     <div
-    onDoubleClick={(e) => {
-      data.removeNote(`notes/${data.note.title}.txt`)
+    onContextMenu={(e) => {
+      const rect = e.target.getBoundingClientRect()
+
+      data.setContextData({
+        top: rect.top,
+        left: rect.left,
+        isOpen: true
+      })
     }}
-     onClick={(e) => {
+    onClick={(e) => {
       data.setCurrentIndex(data.index)
-      
     }} 
     className={`note ${data.class}`}>
-      <p className='note-name'>{data.note.title}</p>
+      <input 
+        onDoubleClick={(e) => {
+          if(e.target.hasAttribute('readonly')) {
+            e.target.removeAttribute('readonly')
+
+            data.saveNoteTitle(`${data.note.title}`, `${e.target.value}`)
+          }else {
+            e.target.setAttribute('readonly', 'true');
+          }
+        }}
+        onBlur={(e) => {
+          e.target.removeAttribute('readonly')
+          data.saveNoteTitle(`${data.note.title}`, `${e.target.value}`)
+        }}
+        onChange={(e) => {
+          setTitle(e.target.value)
+        }}
+        type='text'  
+        className='note-name input-field' 
+        value={title}
+        readOnly={true}
+      />
     </div>
   )
 
