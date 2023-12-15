@@ -214,30 +214,40 @@ const NoteContent = forwardRef(function(props, ref) {
 
       <div className="header-options">
           <input onBlur={(e) => {
-            let tr = window.getSelection().getRangeAt(0);
-            let span = document.createElement("span");
-            span.style.color = e.target.value;
-            span.appendChild(tr.extractContents());
-            tr.insertNode(span)
-          
+            // let tr = window.getSelection().getRangeAt(0);
+            // let span = document.createElement("span");
+            // span.style.color = e.target.value;
+            // span.appendChild(tr.extractContents());
+            // tr.insertNode(span)
+
           }} type="color" defaultValue={"#FFFFFF"} className='input color-input' id="current-color" name="Text color" />
 
-          {/* <svg
-          xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
-            <g clipPath="url(#clip0_29_66)">
-              <path d="M5 10V7.5C5 6.83696 5.26339 6.20107 5.73223 5.73223C6.20107 5.26339 6.83696 5 7.5 5H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 20V22.5C5 23.163 5.26339 23.7989 5.73223 24.2678C6.20107 24.7366 6.83696 25 7.5 25H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M20 5H22.5C23.163 5 23.7989 5.26339 24.2678 5.73223C24.7366 6.20107 25 6.83696 25 7.5V10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M20 25H22.5C23.163 25 23.7989 24.7366 24.2678 24.2678C24.7366 23.7989 25 23.163 25 22.5V20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M15 20V11.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M11.25 11.25H18.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </g>
-            <defs>
-    <clipPath id="clip0_29_66">
-      <rect width="30" height="30" fill="white"/>
-    </clipPath>
-  </defs>
-          </svg> */}
+          <span
+            onClick={() => {
+               let tr = window.getSelection().getRangeAt(0);
+              let span = document.createElement("span");
+              span.style.color = "#FF0000";
+              span.appendChild(tr.extractContents());
+              tr.insertNode(span)
+            }}
+            >
+            <svg
+                xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
+                  <g clipPath="url(#clip0_29_66)">
+                    <path d="M5 10V7.5C5 6.83696 5.26339 6.20107 5.73223 5.73223C6.20107 5.26339 6.83696 5 7.5 5H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5 20V22.5C5 23.163 5.26339 23.7989 5.73223 24.2678C6.20107 24.7366 6.83696 25 7.5 25H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M20 5H22.5C23.163 5 23.7989 5.26339 24.2678 5.73223C24.7366 6.20107 25 6.83696 25 7.5V10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M20 25H22.5C23.163 25 23.7989 24.7366 24.2678 24.2678C24.7366 23.7989 25 23.163 25 22.5V20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M15 20V11.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M11.25 11.25H18.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </g>
+                  <defs>
+                <clipPath id="clip0_29_66">
+                  <rect width="30" height="30" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </span>
 
           {
             isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
