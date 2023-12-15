@@ -28,3 +28,33 @@ export  function syncFiles() {
 
     return newNotes
 }
+
+
+export function markdownToHtml(text) {
+  let htmlText = ''
+  let htmlArr = []
+  let i = 0
+  
+  
+  while(i < text.length) {
+    let str = '', tag = ''
+    while(text[i] !== '<' && i < text.length) {
+      str += text[i]
+      i++
+    }
+    
+    while(text[i] !== '>' && i < text.length) {
+      tag += text[i]
+      i++
+    }
+    tag += text[i++]
+
+
+    htmlArr.push(str)
+    htmlArr.push(tag)
+  }
+    
+    
+  
+  return htmlArr.join('')
+}

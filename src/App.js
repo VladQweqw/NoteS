@@ -1,5 +1,5 @@
 import { forwardRef , useState, useEffect, useRef } from 'react';
-import { getNewName, syncFiles } from './assets/functions';
+import { getNewName, syncFiles, markdownToHtml } from './assets/functions';
 import Context from './hooks/context';
 
 // Syles
@@ -85,7 +85,7 @@ function App() {
 
   useEffect(() => {
     if(textArea.current)
-      textArea.current.innerHTML = notes[currentIndex].text
+      textArea.current.innerHTML = markdownToHtml(notes[currentIndex].text)
 
       const notes_elem = document.querySelectorAll('.note')
 
@@ -214,23 +214,14 @@ const NoteContent = forwardRef(function(props, ref) {
 
       <div className="header-options">
           <input onBlur={(e) => {
-            // let tr = window.getSelection().getRangeAt(0);
-            // let span = document.createElement("span");
-            // span.style.color = e.target.value;
-            // span.appendChild(tr.extractContents());
-            // tr.insertNode(span)
+            let tr = window.getSelection().getRangeAt(0);
+            let span = document.createElement("span");
+            span.style.color = e.target.value;
+            span.appendChild(tr.extractContents());
+            tr.insertNode(span)
 
           }} type="color" defaultValue={"#FFFFFF"} className='input color-input' id="current-color" name="Text color" />
 
-          <span
-            onClick={() => {
-               let tr = window.getSelection().getRangeAt(0);
-              let span = document.createElement("span");
-              span.style.color = "#FF0000";
-              span.appendChild(tr.extractContents());
-              tr.insertNode(span)
-            }}
-            >
             <svg
                 xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
                   <g clipPath="url(#clip0_29_66)">
@@ -247,7 +238,6 @@ const NoteContent = forwardRef(function(props, ref) {
                 </clipPath>
               </defs>
             </svg>
-          </span>
 
           {
             isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
