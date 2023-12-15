@@ -9,13 +9,14 @@ const fs = window.require('fs')
 
 function App() {
   const INITIAL_NOTES = syncFiles()
-
+  const [isContextOpen, setIsContextOpen] = useState(false)
   const [notes, setNotes] = useState(INITIAL_NOTES)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [contextData, setContextData] = useState({
     top: 0,
     left: 0,
-    isOpen: false
+    noteWidth: 0,
+    file_path: '',
   })
   const textArea = useRef(null)
 
@@ -60,7 +61,7 @@ function App() {
     try {
       fs.rename(`notes/${file_path}.txt`, `notes/${new_title}.txt`, () => {
         console.log('Saved succesfully! - TItle')
-        console.log(syncFiles());
+
         setNotes(() => syncFiles())
       })
     }
@@ -70,6 +71,7 @@ function App() {
   }
 
   function removeNote(file_path) {
+
     try {
       fs.unlinkSync(file_path);
       console.log('Removed succesfully!');
@@ -97,7 +99,6 @@ function App() {
 
   return (
     <main className="main">
-
       <div className="sidebar">
         <div className="top-sidebar">
           <div className="search-wrapper">
@@ -147,6 +148,7 @@ function App() {
               return <Note 
               setContextData={setContextData}
               removeNote={removeNote} 
+              setIsContextOpen={setIsContextOpen}
               setCurrentIndex={setCurrentIndex} 
               index={index} 
               saveNoteTitle={saveNoteTitle} 
@@ -167,7 +169,8 @@ function App() {
             ref={textArea} 
             note={notes[currentIndex]} />}
       </article> 
-        <Context contextData={contextData} />
+
+      <Context removeNote={removeNote} isContextOpen={isContextOpen} setIsContextOpen={setIsContextOpen} contextData={contextData} />
     </main>
   );
 }
@@ -274,25 +277,31 @@ const NoteContent = forwardRef(function(props, ref) {
 
 function Note(data) {
   const [title, setTitle] = useState(data.note.title)
-
+  const note = useRef(null)
   useEffect(() => {
     setTitle(data.note.title)
   }, [data.note.title])
   
   return(
     <div
+    ref={note}
     onContextMenu={(e) => {
-      const rect = e.target.getBoundingClientRect()
-
+      const rect = note.current.getBoundingClientRect()
+      
       data.setContextData({
         top: rect.top,
         left: rect.left,
-        isOpen: true
+        noteWidth: rect.width,
+        file_path: `notes/${title}.txt`,
       })
+
+      data.setIsContextOpen(true)
     }}
+
     onClick={(e) => {
       data.setCurrentIndex(data.index)
     }} 
+    
     className={`note ${data.class}`}>
       <input 
         onDoubleClick={(e) => {
@@ -304,10 +313,12 @@ function Note(data) {
             e.target.setAttribute('readonly', 'true');
           }
         }}
+
         onBlur={(e) => {
-          e.target.removeAttribute('readonly')
+          e.target.setAttribute('readonly', 'true');
           data.saveNoteTitle(`${data.note.title}`, `${e.target.value}`)
         }}
+
         onChange={(e) => {
           setTitle(e.target.value)
         }}

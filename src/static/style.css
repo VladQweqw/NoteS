@@ -256,10 +256,39 @@ body {
 
 .context-menu {
   position: absolute;
-  background-color: red;
-  opacity: 1;
+  background-color: #181818;
+  border-radius: 8px;
+  overflow: hidden;
+  color: #FFF;
+  display: grid;
+  opacity: 0;
+  width: 150px;
+  transition: 200ms ease;
+  max-width: 150px;
+  pointer-events: none;
+}
+.context-menu .context-menu-item {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5019607843);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.2509803922);
+}
+.context-menu .context-menu-item .svg path {
+  stroke: rgb(185, 40, 40);
+}
+.context-menu .context-menu-item:last-child {
+  border-bottom: none;
+}
+.context-menu .context-menu-item:hover {
+  background-color: rgb(49, 49, 49);
+  color: #FFF;
 }
 
 .context-menu-open {
   opacity: 1;
+  pointer-events: all;
 }/*# sourceMappingURL=style.css.map */
