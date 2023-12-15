@@ -42,10 +42,14 @@ body {
     height: 25px;
     
     path {
-        color: $text;
+        stroke: $text;
     }
 }
 
 .accent {
     color: $accent;
+}
+
+.highlight {
+    color: red;
 }

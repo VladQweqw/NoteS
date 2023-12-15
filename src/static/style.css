@@ -41,11 +41,15 @@ body {
   height: 25px;
 }
 .svg path {
-  color: #FFF;
+  stroke: #FFF;
 }
 
 .accent {
   color: #9C3EBD;
+}
+
+.highlight {
+  color: red;
 }
 
 .main {
@@ -125,7 +129,7 @@ body {
   padding: 0.75rem 1rem;
   border-radius: 6px;
   text-align: center;
-  transition: 300ms ease-in-out;
+  transition: 100ms ease-in-out;
   cursor: pointer;
 }
 .main .sidebar .notes .note .note-name {
@@ -138,9 +142,14 @@ body {
   height: 100%;
   border: none;
   color: rgba(255, 255, 255, 0.5019607843);
+  background-color: transparent;
 }
 .main .sidebar .notes .note:hover {
   background-color: #2A1E44;
+  scale: 0.95;
+}
+.main .sidebar .notes .note:hover .note-name {
+  color: #FFF;
 }
 .main .sidebar .notes .note-active {
   background-color: #4B2B8E;
@@ -148,7 +157,6 @@ body {
 }
 .main .sidebar .notes .note-active .note-name {
   color: #FFF;
-  background-color: transparent;
 }
 .main .notes::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
@@ -220,7 +228,7 @@ body {
   width: 25px;
   height: 25px;
   outline: none;
-  outline: 1px solid #181818;
+  outline: 1px solid #202020;
   -webkit-appearance: none;
   border: none;
   cursor: pointer;
@@ -256,39 +264,39 @@ body {
 
 .context-menu {
   position: absolute;
-  background-color: #181818;
+  background-color: #202020;
   border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2509803922);
   overflow: hidden;
   color: #FFF;
   display: grid;
-  opacity: 0;
-  width: 150px;
   transition: 200ms ease;
-  max-width: 150px;
   pointer-events: none;
+  scale: 0;
 }
 .context-menu .context-menu-item {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.5rem 1rem;
   justify-content: center;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   cursor: pointer;
+  transition: 200ms ease;
   color: rgba(255, 255, 255, 0.5019607843);
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.2509803922);
 }
-.context-menu .context-menu-item .svg path {
+.context-menu .context-menu-item .delete-svg path {
   stroke: rgb(185, 40, 40);
 }
 .context-menu .context-menu-item:last-child {
   border-bottom: none;
 }
 .context-menu .context-menu-item:hover {
-  background-color: rgb(49, 49, 49);
+  background-color: #181818;
   color: #FFF;
 }
 
 .context-menu-open {
-  opacity: 1;
   pointer-events: all;
+  scale: 1;
 }/*# sourceMappingURL=style.css.map */

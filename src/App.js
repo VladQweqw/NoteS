@@ -220,9 +220,10 @@ const NoteContent = forwardRef(function(props, ref) {
             span.appendChild(tr.extractContents());
             tr.insertNode(span)
           
-          }} type="color" className='input color-input' id="current-color" name="Text color" />
+          }} type="color" defaultValue={"#FFFFFF"} className='input color-input' id="current-color" name="Text color" />
 
-          <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
+          {/* <svg
+          xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
             <g clipPath="url(#clip0_29_66)">
               <path d="M5 10V7.5C5 6.83696 5.26339 6.20107 5.73223 5.73223C6.20107 5.26339 6.83696 5 7.5 5H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M5 20V22.5C5 23.163 5.26339 23.7989 5.73223 24.2678C6.20107 24.7366 6.83696 25 7.5 25H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -236,7 +237,7 @@ const NoteContent = forwardRef(function(props, ref) {
       <rect width="30" height="30" fill="white"/>
     </clipPath>
   </defs>
-          </svg>
+          </svg> */}
 
           {
             isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
