@@ -106,10 +106,11 @@
 
             .note:hover {
                 background-color: $purple30;
-                scale: .95;
+                scale: .90;
 
                 .note-name {
                     color: $text;
+                    cursor: pointer;
                 }
             }
 
@@ -119,6 +120,7 @@
 
                 .note-name {
                     color: $text;
+                    cursor: auto;
                 }
 
             }
@@ -132,23 +134,45 @@
     
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: $background_contrast; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: $purple60; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $purple30; 
+  }
+
 .note-content-wrapper {
     padding: .5rem;
     padding-left: 0;
     display: grid;
-    grid-template-rows: 75px auto;
+    grid-template-rows: 75px 1fr;
     gap: .5rem;
     
+
+
     #note-content {
         width: 100%;
-        height: 100%;
+        height: calc(100dvh - 75px - 1.5rem);
         background-color: $background;
         color: $text;
         resize: none;
         font-family: $ff;
         outline: none;
         font-size: 1.125rem;
-        overflow: auto;
+        overflow: hidden;
+        overflow-y: auto;
        
     }
 
@@ -302,5 +326,35 @@
 .context-menu-open {
     pointer-events: all;
     scale: 1;
+
+}
+
+.color-context-menu {
+    position: absolute;
+    background-color: $background_contrast;
+    border-radius: 8px;
+    border: 1px solid $third_text;
+    transition: 200ms ease;
+    pointer-events: none;
+    scale: 0;
+    display: flex;
+    gap: .5rem;
+    list-style-type: none;
+    align-items: center;
+    z-index: 999;
+    padding: .5rem;
+
+    .color-context-item {
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        background-color: red;
+    }
+
+}
+
+.color-context-menu-open {
+    scale: 1;
+    pointer-events: all;
 
 }

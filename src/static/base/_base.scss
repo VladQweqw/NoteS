@@ -51,5 +51,13 @@ body {
 }
 
 .highlight {
-    color: red;
+    background-color: $background_contrast;
+    padding: .5rem 1rem;
+    margin: .5rem;
+    color: $text;
+    border-radius: 8px;
+}
+
+.header-pre {
+    
 }

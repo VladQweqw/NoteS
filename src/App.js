@@ -1,6 +1,7 @@
 import { forwardRef , useState, useEffect, useRef } from 'react';
 import { getNewName, syncFiles, markdownToHtml } from './assets/functions';
 import Context from './hooks/context';
+import ColorContext from './hooks/colorContext';
 
 // Syles
 import './static/style.css'
@@ -9,16 +10,29 @@ const fs = window.require('fs')
 
 function App() {
   const INITIAL_NOTES = syncFiles()
+
   const [isContextOpen, setIsContextOpen] = useState(false)
+  const [isColorContextOpen, setIsColorContextOpen] = useState(false)
+  
+  const [colorContextSelect, setColorContextSelect] = useState('#ffffff')
+
   const [notes, setNotes] = useState(INITIAL_NOTES)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)  
+
   const [contextData, setContextData] = useState({
     top: 0,
     left: 0,
     noteWidth: 0,
     file_path: '',
   })
-  const textArea = useRef(null)
+  
+  const [colorContextData, setColorContextData] = useState({
+    top: 0,
+    left: 0,
+    textHeight: 0
+  })
+
+  const textArea = useRef(null)  
 
   function searchNotes(search) {
     if(search.trim() === '') return setNotes(INITIAL_NOTES)
@@ -85,17 +99,8 @@ function App() {
 
   useEffect(() => {
     if(textArea.current)
-      textArea.current.innerHTML = markdownToHtml(notes[currentIndex].text)
-
-      const notes_elem = document.querySelectorAll('.note')
-
-      notes_elem.forEach((note) => {
-        note.classList.remove('note-active')
-        notes_elem[currentIndex].classList.add('note-active')
-      })
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex])
+        textArea.current.innerHTML = markdownToHtml(notes[currentIndex].text || '')
+  }, [notes, currentIndex])
 
   return (
     <main className="main">
@@ -146,6 +151,7 @@ function App() {
         <div className="bottom-sidebar notes" id='notes'>
             {notes.length > 0 ? notes?.map((note, index) => {
               return <Note 
+              isActive={currentIndex === index}
               setContextData={setContextData}
               removeNote={removeNote} 
               setIsContextOpen={setIsContextOpen}
@@ -161,16 +167,31 @@ function App() {
         </div>
       </div>
 
-      <article className="note-content-wrapper"> 
-        {notes.length > 0 && notes[currentIndex] && 
+      {notes.length > 0 && notes[currentIndex] && 
             <NoteContent 
+            colorContextSelect={colorContextSelect}
             saveNoteTitle={saveNoteTitle} 
             saveNoteContent={saveNoteContent} 
             ref={textArea} 
-            note={notes[currentIndex]} />}
-      </article> 
+            note={notes[currentIndex]}
+            setColorContextData={setColorContextData}
+            setIsColorContextOpen={setIsColorContextOpen}
+             />
+      }
 
-      <Context removeNote={removeNote} isContextOpen={isContextOpen} setIsContextOpen={setIsContextOpen} contextData={contextData} />
+      <Context 
+      removeNote={removeNote} 
+      isContextOpen={isContextOpen} 
+      setIsContextOpen={setIsContextOpen} 
+      contextData={contextData} />
+
+      <ColorContext 
+      isColorContextOpen={isColorContextOpen} 
+      setIsColorContextOpen={setIsColorContextOpen} 
+      colorContextData={colorContextData} 
+
+      setColorContextSelect={setColorContextSelect}
+      />
     </main>
   );
 }
@@ -181,104 +202,112 @@ const NoteContent = forwardRef(function(props, ref) {
 
   useEffect(() => {
     setText(props.note.title)
-  }, [props.note])
-  
+  }, [props.note.title])  
+
   const handleChange = event => {
     setText(event.target.value);
   };
 
-  return <>
-    <header className="note-content-header">
-      <div className="title-wrapper">
-        <input 
-        className="note-title" 
-        value={text}
-        onChange={handleChange}
-        onBlur={(e) => {
-          props.saveNoteTitle(`${props.note.title}`, `${e.target.value}`)
-      }}
-      ></input>
-        <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 23 23" fill="none">
-        <g clipPath="url(#clip0_6_195)">
-          <path d="M7.66671 19.1667L17.7292 9.10417C17.9809 8.85247 18.1806 8.55366 18.3168 8.2248C18.453 7.89593 18.5231 7.54346 18.5231 7.1875C18.5231 6.83155 18.453 6.47907 18.3168 6.15021C18.1806 5.82135 17.9809 5.52254 17.7292 5.27084C17.4775 5.01914 17.1787 4.81948 16.8498 4.68326C16.521 4.54704 16.1685 4.47693 15.8125 4.47693C15.4566 4.47693 15.1041 4.54704 14.7752 4.68326C14.4464 4.81948 14.1476 5.01914 13.8959 5.27084L3.83337 15.3333V19.1667H7.66671Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M12.9375 6.22919L16.7708 10.0625" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M15.3334 17.25H19.1667" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        </g>
-        <defs>
-          <clipPath id="clip0_6_195">
-            <rect width="23" height="23" fill="white"/>
-          </clipPath>
-        </defs>
-        </svg>
-      </div>
+  return <article 
+  onBlur={() => {
+    props.saveNoteContent(`notes/${props.note.title}.txt`, ref.current.innerHTML)
+  }}
+  
+  className="note-content-wrapper">
+      <header className="note-content-header">
+        <div className="title-wrapper">
+          <input 
+          className="note-title" 
+          value={text}
+          onChange={handleChange}
+          onBlur={(e) => {
+            props.saveNoteTitle(`${props.note.title}`, `${e.target.value}`)
+        }}
+        ></input>
+          <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 23 23" fill="none">
+          <g clipPath="url(#clip0_6_195)">
+            <path d="M7.66671 19.1667L17.7292 9.10417C17.9809 8.85247 18.1806 8.55366 18.3168 8.2248C18.453 7.89593 18.5231 7.54346 18.5231 7.1875C18.5231 6.83155 18.453 6.47907 18.3168 6.15021C18.1806 5.82135 17.9809 5.52254 17.7292 5.27084C17.4775 5.01914 17.1787 4.81948 16.8498 4.68326C16.521 4.54704 16.1685 4.47693 15.8125 4.47693C15.4566 4.47693 15.1041 4.54704 14.7752 4.68326C14.4464 4.81948 14.1476 5.01914 13.8959 5.27084L3.83337 15.3333V19.1667H7.66671Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12.9375 6.22919L16.7708 10.0625" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M15.3334 17.25H19.1667" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_6_195">
+              <rect width="23" height="23" fill="white"/>
+            </clipPath>
+          </defs>
+          </svg>
+        </div>
 
-      <div className="header-options">
-          <input onBlur={(e) => {
-            let tr = window.getSelection().getRangeAt(0);
-            let span = document.createElement("span");
-            span.style.color = e.target.value;
-            span.appendChild(tr.extractContents());
-            tr.insertNode(span)
-
-          }} type="color" defaultValue={"#FFFFFF"} className='input color-input' id="current-color" name="Text color" />
-
-            <svg
-                xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 30 30" fill="none">
-                  <g clipPath="url(#clip0_29_66)">
-                    <path d="M5 10V7.5C5 6.83696 5.26339 6.20107 5.73223 5.73223C6.20107 5.26339 6.83696 5 7.5 5H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M5 20V22.5C5 23.163 5.26339 23.7989 5.73223 24.2678C6.20107 24.7366 6.83696 25 7.5 25H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M20 5H22.5C23.163 5 23.7989 5.26339 24.2678 5.73223C24.7366 6.20107 25 6.83696 25 7.5V10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M20 25H22.5C23.163 25 23.7989 24.7366 24.2678 24.2678C24.7366 23.7989 25 23.163 25 22.5V20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M15 20V11.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M11.25 11.25H18.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </g>
-                  <defs>
-                <clipPath id="clip0_29_66">
-                  <rect width="30" height="30" fill="white"/>
-                </clipPath>
-              </defs>
-            </svg>
-
-          {
-            isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_7_14260)">
-              <path d="M4 6H14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M4 18H14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M4 12H21L18 9M18 15L21 12" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </g>
-              <defs>
-              <clipPath id="clip0_7_14260">
-              <rect width="24" height="24" fill="white"/>
-              </clipPath>
-              </defs>
-            </svg>
-            :
-            <svg onClick={() => setIsTextWrap(true)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clipPath="url(#clip0_7_16520)">
-                <path d="M4 6H20" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4 18H9" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4 12H17C17.7956 12 18.5587 12.3161 19.1213 12.8787C19.6839 13.4413 20 14.2044 20 15C20 15.7956 19.6839 16.5587 19.1213 17.1213C18.5587 17.6839 17.7956 18 17 18H13L15 16M15 20L13 18" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <div className="header-options">  
+            {
+              isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_7_14260)">
+                <path d="M4 6H14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 18H14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 12H21L18 9M18 15L21 12" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </g>
                 <defs>
-                <clipPath id="clip0_7_16520">
+                <clipPath id="clip0_7_14260">
                 <rect width="24" height="24" fill="white"/>
                 </clipPath>
                 </defs>
-            </svg>
-          }
-      </div>
-    </header>
-    <pre
-    className={`${isTextWrap ? 'note-content-wrap' : ''}`}
-    onBlur={(e) => {
-      props.saveNoteContent(`notes/${props.note.title}.txt`, e.target.innerHTML)
-    }} id="note-content" ref={ref} contentEditable></pre>
-  </>
+              </svg>
+              :
+              <svg onClick={() => setIsTextWrap(true)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clipPath="url(#clip0_7_16520)">
+                  <path d="M4 6H20" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4 18H9" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4 12H17C17.7956 12 18.5587 12.3161 19.1213 12.8787C19.6839 13.4413 20 14.2044 20 15C20 15.7956 19.6839 16.5587 19.1213 17.1213C18.5587 17.6839 17.7956 18 17 18H13L15 16M15 20L13 18" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </g>
+                  <defs>
+                  <clipPath id="clip0_7_16520">
+                  <rect width="24" height="24" fill="white"/>
+                  </clipPath>
+                  </defs>
+              </svg>
+            }
+        </div>
+      </header>
+
+      <pre
+      onContextMenu={(e) => {  
+        if(window.getSelection().getRangeAt(0)) {
+          props.setIsColorContextOpen(true)
+          const rect = e.target.getBoundingClientRect()
+          
+          props.setColorContextData({
+            top: rect.top,
+            left: rect.left,
+            textHeight: rect.height
+          })
+
+          let tr = window.getSelection().getRangeAt(0);
+          let span = document.createElement("span")
+          span.style.color = props.colorContextSelect
+          span.appendChild(tr.extractContents());
+
+          tr.insertNode(span)
+          
+        }
+
+      }}
+      onKeyDown={(e) => {
+        if(e.ctrlKey && e.key.toLowerCase() === 's') {
+          props.saveNoteContent(`notes/${props.note.title}.txt`, e.target.innerHTML)
+        }
+      }}
+      className={`${isTextWrap ? 'note-content-wrap' : ''}`}
+      id="note-content" 
+      ref={ref} 
+      contentEditable={true}>
+      </pre>
+  </article>
 })
 
 function Note(data) {
   const [title, setTitle] = useState(data.note.title)
   const note = useRef(null)
+
   useEffect(() => {
     setTitle(data.note.title)
   }, [data.note.title])
@@ -303,7 +332,7 @@ function Note(data) {
       data.setCurrentIndex(data.index)
     }} 
     
-    className={`note ${data.class}`}>
+    className={`note ${data.isActive ? 'note-active': '' }`}>
       <input 
         onDoubleClick={(e) => {
           if(e.target.hasAttribute('readonly')) {
