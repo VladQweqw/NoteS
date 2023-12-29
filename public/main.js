@@ -10,7 +10,8 @@ function createWindow() {
             nodeIntegration: true,
             enableRemoteModule: true,
             contextIsolation: false
-        }
+        },
+        icon: __dirname +  "logo.ico",
     })
 
     win.loadURL('http://localhost:3000')

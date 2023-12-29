@@ -13,18 +13,24 @@ export function getNewName() {
     return `Untitled_${i}`
 }
 
-export  function syncFiles() {
+export function syncFiles() {
     const newNotes = []
+    let i = 0
+    if (!fs.existsSync('notes')){
+      fs.mkdirSync('notes');
+    }
 
     fs.readdirSync('notes').forEach((file_name) => {
       const noteContent = fs.readFileSync(`notes/${file_name}`, 'utf8')
-
+      
       newNotes.push({
         title: file_name.slice(0, -4),
-        text: noteContent
+        text: noteContent,
+        creationDate: parseInt(new Date(fs.statSync(`notes/${file_name}`).birthtime).getTime()),
+        id: i++
       })
-    })
 
+    })
 
     return newNotes
 }
@@ -54,8 +60,8 @@ export function markdownToHtml(text) {
       wrap: function(text) {
         return this.start + text.slice(1) + this.end 
       }
-    }
-
+    },
+  
   }
 
   let divIdx = text.indexOf('<')
@@ -111,4 +117,14 @@ export function markdownToHtml(text) {
 
 
   return htmlArr.join('')
+}
+
+export function themeHandler(palette, index) {
+  let root = document.querySelector(':root');
+
+  Object.entries(palette).forEach((color) => {
+      root.style.setProperty(`--${color[0]}`, color[1]);
+  })
+
+  localStorage.setItem('themeIndex', index)
 }

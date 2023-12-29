@@ -10,7 +10,7 @@
     .sidebar {
         padding: .5rem;
         display: grid;
-        grid-template-rows: 75px auto;
+        grid-template-rows: 75px auto 50px;
         height: 100dvh;
         width: 100%;
         gap: .5rem;
@@ -20,6 +20,19 @@
             background-color: $background_contrast;
             padding: .75rem;
             border-radius: 8px;
+        }   
+
+        .sidebar-footer {
+            background-color: $background_contrast;
+            padding: .75rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            p {
+                color: $third_text;
+            }
         }
 
         .top-sidebar {
@@ -40,7 +53,18 @@
                     color: $text;
                     text-align: center;
 
+
                 }
+
+                ::placeholder {
+                    color: $secondary_text;
+                    opacity: 1; /* Firefox */
+                  }
+                  
+                  ::-ms-input-placeholder { /* Edge 12-18 */
+                    color: $secondary_text;
+                  }
+
             }
         }
 
@@ -136,22 +160,22 @@
 
 ::-webkit-scrollbar {
     width: 5px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: $background_contrast; 
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: $purple60; 
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: $purple30; 
-  }
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: $background_contrast; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: $purple60; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: $purple30; 
+}
 
 .note-content-wrapper {
     padding: .5rem;
@@ -329,32 +353,31 @@
 
 }
 
-.color-context-menu {
-    position: absolute;
-    background-color: $background_contrast;
-    border-radius: 8px;
-    border: 1px solid $third_text;
-    transition: 200ms ease;
-    pointer-events: none;
-    scale: 0;
+.text-colors {
     display: flex;
     gap: .5rem;
-    list-style-type: none;
     align-items: center;
-    z-index: 999;
-    padding: .5rem;
 
-    .color-context-item {
-        cursor: pointer;
+    .color-item {
         width: 25px;
         height: 25px;
-        background-color: red;
+        cursor: pointer;
+        border-radius: 100px;
+        border: 1px solid $third_text;
+        transition: 200ms ease;       
+         
+    }
+    .color-item:hover {
+        scale: .75;
+    }
+    .color-item:active {
+        scale: .8;
     }
 
-}
-
-.color-context-menu-open {
-    scale: 1;
-    pointer-events: all;
+    .color-item-active {
+        border: 3px solid white;
+        width: 30px;
+        height: 30px;
+    }
 
 }

@@ -31,9 +31,17 @@ body {
     background-color: $background;
     color: $text;
 }
-
+.no-content-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .no-data-text {
     color: $secondary_text;
+    cursor: pointer;
+    text-decoration: underline;
 
 }
 
@@ -46,6 +54,21 @@ body {
     }
 }
 
+.svg-btn {
+    cursor: pointer;
+
+    path {
+        transition: 200ms ease;
+    }
+}
+
+.svg-btn:hover {
+
+    path {
+        stroke: $secondary_text;
+    }
+}
+
 .accent {
     color: $accent;
 }
@@ -53,11 +76,15 @@ body {
 .highlight {
     background-color: $background_contrast;
     padding: .5rem 1rem;
-    margin: .5rem;
     color: $text;
-    border-radius: 8px;
 }
 
-.header-pre {
-    
+
+.highlight:last-child {
+    border-radius: 0 0 8px 8px;
 }
+
+.highlight:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
