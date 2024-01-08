@@ -31,3 +31,32 @@ body {
     background-color: $background;
     color: $text;
 }
+
+.svg {
+    width: 25px;
+    height: 25px;
+    
+    path {
+        stroke: $text;
+    }
+}
+
+.svg-btn {
+    cursor: pointer;
+
+    path {
+        transition: 200ms ease;
+    }
+}
+
+.svg-btn:hover {
+
+    path {
+        stroke: $secondary_text;
+    }
+}
+
+.accent {
+    color: $accent;
+}
+
