@@ -1,7 +1,9 @@
 {
-  "name": "NoteS",
+  "name": "notesplus",
   "author": {
-    "email": "vladpoienariu@gmail.com"
+    "email": "vladpoienariu@gmail.com",
+    "name": "Vlad Poienariu",
+    "url": "https://vladpoienariu.netlify.app"
   },
   "description": "Note app improved",
   "version": "0.1.0",
