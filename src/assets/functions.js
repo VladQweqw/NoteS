@@ -1,6 +1,5 @@
 const fs = window.require('fs')
 
-
 export function getNewName() {
     const names = fs.readdirSync('notes')
     let i = 2;
@@ -23,11 +22,11 @@ export function syncFiles() {
   fs.readdirSync('notes').forEach((file_name) => {
     const stats = fs.statSync(`notes/${file_name}`)
     const noteContent = fs.readFileSync(`notes/${file_name}`, 'utf8')
-
+    console.log(stats);
     newNotes.push({
       title: file_name.slice(0, -4),
       text: noteContent,
-      lastModified: stats.mtimeMs,
+      lastModified: Math.floor(stats.mtimeMs),
       creationDate: stats.birthtimeMs,
       id: i++
     })
@@ -36,7 +35,6 @@ export function syncFiles() {
 
   return newNotes
 }
-
 
 export function markdownToHtml(text) {
   if(!text) return ' '
@@ -132,13 +130,23 @@ export function themeHandler(palette, index) {
 }
 
 export function convertMsToCurrentDate(ms) {
-  const diff = (new Date().getTime() - ms) / 60;
-  const minutes = (diff / 60);
-  const hours = Math.floor(minutes % 24);
-  const days = hours % 24;
-  const months = 1;
-  const years = 1;
+  const seconds = Math.floor((new Date().getTime() - ms) / 360);
+
+  let minutes = Math.floor(seconds / 60);
+  let hours = Math.floor(seconds / 3600);
+  let days = Math.floor(seconds / ( 3600 * 24));
   
-  console.log(hours, minutes);
-  return hours + ' ago'
+  console.log(days, hours, minutes, seconds);
+  if(days) {
+    return `${days} days ago`
+  } else if(hours) {
+    return `${hours} hours ago`
+  } else if(minutes) {
+    return `${minutes} minutes ago`
+  }else if(seconds) {
+    return `${seconds} seconds ago`
+  }else {
+    return 'Right now'
+  }
+
 }

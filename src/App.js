@@ -12,8 +12,8 @@ import ThemesModal from './hooks/themesModal';
 // File system
 const fs = window.require('fs')
 
+const INITIAL_NOTES = syncFiles()
 function App() {
-  const INITIAL_NOTES = syncFiles()
   const textArea = useRef(null)  
 
   // Theme auto-update due to user's settings
@@ -73,15 +73,13 @@ function App() {
     }catch(err) {
       console.log(`Error: ${err}`);
     }
-
+    
   }
 
   function saveNoteTitle(file_path, new_title) {
     try {
       fs.rename(`notes/${file_path}.txt`, `notes/${new_title}.txt`, () => {
-        console.log('Saved succesfully!')
-
-        setNotes(() => syncFiles())
+        console.log('Saved succesfully!')        
       })
     }catch(err) {
       console.log(`Error: ${err}`);
@@ -101,22 +99,22 @@ function App() {
   }
 
   function sortNotes() {
-    let sortedNotes = []
     const copyNotes = [...notes]
 
     if(sortedAscdending) {
-      sortedNotes = copyNotes.sort((a, b) =>  b.creationDate - a.creationDate)
+      copyNotes.sort((a, b) =>  b.creationDate - a.creationDate)
     }else {
-      sortedNotes = copyNotes.sort((a, b) =>  a.creationDate - b.creationDate)
+      copyNotes.sort((a, b) =>  a.creationDate - b.creationDate)
     }
 
-    setNotes(() => sortedNotes)
+    setNotes(copyNotes)
     setSortedAscdending(!sortedAscdending)
+    
   }
 
   useEffect(() => {
     if(textArea.current)
-        textArea.current.innerHTML = markdownToHtml(notes[currentIndex].text || '')
+        textArea.current.innerHTML = markdownToHtml(notes.find((note) => note.id === currentIndex).text || '')
   }, [notes, currentIndex])
   
   return (
@@ -135,12 +133,12 @@ function App() {
             }}>
               <svg className='svg' viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clipPath="url(#clip0_10_67)">
-                  <path d="M3.5 9L7.5 5L11.5 9M7.5 5V19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M21.5 15L17.5 19L13.5 15M17.5 19V5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M3.5 9L7.5 5L11.5 9M7.5 5V19" stroke={`${sortedAscdending ? "#FFF": "#FF0000"}`} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M21.5 15L17.5 19L13.5 15M17.5 19V5" stroke={`${sortedAscdending ? "#FFF" : "#FF0000"}`}  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </g>
                   <defs>
                   <clipPath id="clip0_10_67">
-                  <rect width="24" height="24" fill="white" transform="translate(0.5)"/>
+                  <rect width="24" height="24" fill={`${sortedAscdending ? "#FFF" : "#FF0000"}`} transform="translate(0.5)"/>
                   </clipPath>
                   </defs>
               </svg>
@@ -172,7 +170,7 @@ function App() {
         <div className="bottom-sidebar notes" id='notes'>
             {notes.length > 0 ? notes?.map((note, index) => {
               return <Note 
-              isActive={currentIndex === index}
+              isActive={currentIndex === note.id}
               setContextData={setContextData}
               removeNote={removeNote} 
               setIsContextOpen={setIsContextOpen}
@@ -214,14 +212,14 @@ function App() {
         </div>
       </div>
 
-      {notes.length > 0 && notes[currentIndex] && 
+      {notes.length > 0 && notes.find((note) => note.id === currentIndex) && 
             <NoteContent 
             colorsIndex={colorsIndex}
             setColorsIndex={setColorsIndex}
             saveNoteTitle={saveNoteTitle} 
             saveNoteContent={saveNoteContent} 
             ref={textArea} 
-            note={notes[currentIndex]}
+            note={notes.find((note) => note.id === currentIndex)}
              />
       }
 
@@ -343,11 +341,12 @@ const NoteContent = forwardRef(function(props, ref) {
 function Note(data) {
   const note = useRef(null)
   const [title, setTitle] = useState(data.note.title)
+  const [lastModified, setLastModified] = useState(convertMsToCurrentDate(data.note.lastModified))
 
   useEffect(() => {
     setTitle(data.note.title)
   }, [data.note.title])
-  
+
   return(
     <div
     ref={note}
@@ -363,13 +362,14 @@ function Note(data) {
 
       data.setIsContextOpen(true)
     }}
-
+    onMouseEnter={(e) => {
+      setLastModified(convertMsToCurrentDate(data.note.lastModified))
+    }}
     onClick={(e) => {
-      data.setCurrentIndex(data.index)
+      data.setCurrentIndex(data.note.id)
     }} 
-    
     className={`note ${data.isActive ? 'note-active': '' }`}>
-      <p className="note-last-update">Edited {convertMsToCurrentDate(data.note.lastModified)}</p>
+      <p className="note-last-update">Edited {lastModified}</p>
 
       <input 
         onDoubleClick={(e) => {

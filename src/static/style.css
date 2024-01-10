@@ -507,7 +507,7 @@ body {
   padding: 0.75rem 1rem;
   border-radius: 6px;
   text-align: center;
-  transition: 100ms ease-in-out;
+  transition: 300ms ease-in-out;
   cursor: pointer;
   position: relative;
   overflow: hidden;
