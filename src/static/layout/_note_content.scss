@@ -32,12 +32,27 @@ background: $purple30;
         // background-color: $background;
         color: $text;
         resize: none;
-        font-family: $ff;
+        font-family: $ff-editor;
         outline: none;
         font-size: 1.125rem;
         overflow: hidden;
         overflow-y: auto;
 
+        .content-image {
+            max-width: 800px;
+            max-height: 600px;
+            object-fit: cover;
+            transition: 200ms ease-in-out;
+        }
+        .content-image:hover {
+            object-fit: contain;
+        }
+
+        .content-tag {
+            
+            background-color: $purple30;
+            border-radius: 8px;
+        }
 
     }
 
@@ -101,7 +116,6 @@ background: $purple30;
         height: 25px;
         outline: none;
         outline: 1px solid $background_contrast;
-        -webkit-appearance: none;
         border: none;
         cursor: pointer;
     }

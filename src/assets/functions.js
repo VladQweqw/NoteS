@@ -22,7 +22,7 @@ export function syncFiles() {
   fs.readdirSync('notes').forEach((file_name) => {
     const stats = fs.statSync(`notes/${file_name}`)
     const noteContent = fs.readFileSync(`notes/${file_name}`, 'utf8')
-    console.log(stats);
+
     newNotes.push({
       title: file_name.slice(0, -4),
       text: noteContent,
@@ -39,6 +39,7 @@ export function syncFiles() {
 export function markdownToHtml(text) {
   if(!text) return ' '
   let htmlArr = []
+
   const markup = {
     "###": {
       start: '<h1>',
@@ -61,12 +62,26 @@ export function markdownToHtml(text) {
         return this.start + text.slice(1) + this.end 
       }
     },
+    "%%": {
+      start: '<div class="content-tag">',
+      end: "</div>",
+      wrap: function(text) {
+        return "<br>" + this.start + text.slice(2) + this.end
+      }
+    },
+    "!(": {
+      wrap: function(text) {
+        return `<br><img class="content-image" alt="URL INVALID" src="${text.slice(2, -1)}" />`
+      }
+    },
   
   }
-
+  
   let divIdx = text.indexOf('<')
   if(divIdx === -1) {
     text = `<div>${text}</div>`
+  }else {
+    htmlArr.push(`<div>${text.slice(0, divIdx)}</div>`)
   }
 
   for(let i = 0; i < text.length - 4; i++) {
@@ -114,7 +129,8 @@ export function markdownToHtml(text) {
         }
     }
   }
-
+  
+  console.log(htmlArr);
 
   return htmlArr.join('')
 }
@@ -130,18 +146,26 @@ export function themeHandler(palette, index) {
 }
 
 export function convertMsToCurrentDate(ms) {
-  const seconds = Math.floor((new Date().getTime() - ms) / 360);
+  const seconds = Math.floor((new Date().getTime() - ms) / 1200);
 
   let minutes = Math.floor(seconds / 60);
   let hours = Math.floor(seconds / 3600);
   let days = Math.floor(seconds / ( 3600 * 24));
   
-  console.log(days, hours, minutes, seconds);
   if(days) {
+    if(days <= 1)
+    return `${days} day ago`
+  
     return `${days} days ago`
   } else if(hours) {
+    if(hours <= 1) 
+      return `${hours} hour ago`
+
     return `${hours} hours ago`
   } else if(minutes) {
+    if(minutes <= 1) 
+      return `${minutes} minute ago`
+
     return `${minutes} minutes ago`
   }else if(seconds) {
     return `${seconds} seconds ago`

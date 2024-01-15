@@ -2,6 +2,7 @@ import { forwardRef, useState, useEffect, useRef } from 'react';
 import { getNewName, syncFiles, markdownToHtml, themeHandler, convertMsToCurrentDate } from './assets/functions';
 import { COLORS, THEMES} from './assets/data';
 
+
 // Syles
 import './static/style.css'
 
@@ -11,6 +12,7 @@ import ThemesModal from './hooks/themesModal';
 
 // File system
 const fs = window.require('fs')
+const VERSION = '0.0.3'
 
 const INITIAL_NOTES = syncFiles()
 function App() {
@@ -79,7 +81,7 @@ function App() {
   function saveNoteTitle(file_path, new_title) {
     try {
       fs.rename(`notes/${file_path}.txt`, `notes/${new_title}.txt`, () => {
-        console.log('Saved succesfully!')        
+        // console.log('Saved succesfully!')        
       })
     }catch(err) {
       console.log(`Error: ${err}`);
@@ -208,7 +210,7 @@ function App() {
             </defs>
             </svg>
 
-            <p>v.0.0.1</p>
+            <p>v{VERSION}</p>
         </div>
       </div>
 
