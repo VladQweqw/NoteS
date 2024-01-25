@@ -24,7 +24,41 @@ background: $purple30;
     grid-template-rows: 75px 1fr;
     gap: .5rem;
     
+    .save-alert {
+        position: absolute;
+        top: calc(100% - 66px);
+        width: 45px;
+        height: 45px;
+        display: grid;
+        place-items: center;
+        right: 1rem;
+        background-color: $purple60;
+        cursor: pointer;
+        box-shadow: 0 4px 5px #00000030;
+        border-radius: 100%;
+        transition: 200ms ease;
+        opacity: 0;
+        scale: 0;
+        svg {
+            path {
+                stroke:  $text;
+            }
+        }
+
+    }
     
+    .save-alert-active {
+        opacity: 1;
+        scale: 1;
+    }
+
+    .save-alert:active {
+        scale: .9;
+    }
+    
+    .save-alert:hover {
+        background-color: $purple30;
+    }
     
     #note-content {
         width: 100%;
@@ -37,6 +71,8 @@ background: $purple30;
         font-size: 1.125rem;
         overflow: hidden;
         overflow-y: auto;
+
+
 
         .content-image {
             max-width: 800px;

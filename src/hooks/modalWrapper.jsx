@@ -1,5 +1,4 @@
 export default function ModalWrapper(props) {
-   console.log(props);
    return(
       <div 
       onClick={(e) => {

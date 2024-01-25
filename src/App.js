@@ -12,7 +12,7 @@ import ThemesModal from './hooks/themesModal';
 
 // File system
 const fs = window.require('fs')
-const VERSION = '0.0.3'
+const VERSION = '0.0.4'
 
 const INITIAL_NOTES = syncFiles()
 function App() {
@@ -27,6 +27,7 @@ function App() {
 
   const [notes, setNotes] = useState(INITIAL_NOTES)
   const [currentIndex, setCurrentIndex] = useState(0)  
+  const [isSaved, setIsSaved] = useState(true)
 
   const [sortedAscdending, setSortedAscdending] = useState(false)
   const [colorsIndex, setColorsIndex] = useState(0)
@@ -70,8 +71,9 @@ function App() {
     try {
       fs.writeFileSync(file_path, new_content)
       console.log('Saved succesfully!')
-      
+
       setNotes(syncFiles())
+      setIsSaved(true)
     }catch(err) {
       console.log(`Error: ${err}`);
     }
@@ -117,7 +119,7 @@ function App() {
   useEffect(() => {
     if(textArea.current)
         textArea.current.innerHTML = markdownToHtml(notes.find((note) => note.id === currentIndex).text || '')
-  }, [notes, currentIndex])
+  }, [currentIndex])
   
   return (
     <main className="main">
@@ -220,6 +222,8 @@ function App() {
             setColorsIndex={setColorsIndex}
             saveNoteTitle={saveNoteTitle} 
             saveNoteContent={saveNoteContent} 
+            setIsSaved={setIsSaved}
+            isSaved={isSaved}
             ref={textArea} 
             note={notes.find((note) => note.id === currentIndex)}
              />
@@ -326,6 +330,7 @@ const NoteContent = forwardRef(function(props, ref) {
           document.execCommand('foreColor', false, COLORS[props.colorsIndex])
         }}
         onKeyDown={(e) => {
+          props.setIsSaved(false)
           if(e.ctrlKey && e.key.toLowerCase() === 's') {
             props.saveNoteContent(`notes/${props.note.title}.txt`, e.target.innerHTML)
           }
@@ -334,9 +339,28 @@ const NoteContent = forwardRef(function(props, ref) {
         id="note-content" 
         ref={ref} 
         contentEditable={true}
-        
       >
+      
       </pre>
+      <div 
+      className={`save-alert ${!props.isSaved ? 'save-alert-active': ''}`}
+      onClick={() => {
+        props.saveNoteContent(`notes/${props.note.title}.txt`, ref.current.innerHTML)
+      }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <g clipPath="url(#clip0_59_72)">
+            <path d="M14 3V7C14 7.26522 14.1054 7.51957 14.2929 7.70711C14.4804 7.89464 14.7348 8 15 8H19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M17 21H7C6.46957 21 5.96086 20.7893 5.58579 20.4142C5.21071 20.0391 5 19.5304 5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H14L19 8V19C19 19.5304 18.7893 20.0391 18.4142 20.4142C18.0391 20.7893 17.5304 21 17 21Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9 15L11 17L15 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_59_72">
+              <rect width="24" height="24" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
   </article>
 })
 

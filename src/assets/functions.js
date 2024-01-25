@@ -130,8 +130,6 @@ export function markdownToHtml(text) {
     }
   }
   
-  console.log(htmlArr);
-
   return htmlArr.join('')
 }
 
@@ -146,27 +144,20 @@ export function themeHandler(palette, index) {
 }
 
 export function convertMsToCurrentDate(ms) {
-  const seconds = Math.floor((new Date().getTime() - ms) / 1200);
+  const seconds = Math.floor((new Date().getTime() - ms) / (60 * 17));
 
   let minutes = Math.floor(seconds / 60);
   let hours = Math.floor(seconds / 3600);
   let days = Math.floor(seconds / ( 3600 * 24));
   
   if(days) {
-    if(days <= 1)
-    return `${days} day ago`
-  
-    return `${days} days ago`
+      if(days > 365) return 'Over an year'
+
+      return days + (days > 1 ? ` days ago`: ' day ago')
   } else if(hours) {
-    if(hours <= 1) 
-      return `${hours} hour ago`
-
-    return `${hours} hours ago`
+    return hours + (hours > 1 ? ` hours ago`: ' hour ago')
   } else if(minutes) {
-    if(minutes <= 1) 
-      return `${minutes} minute ago`
-
-    return `${minutes} minutes ago`
+      return minutes +( minutes > 1 ? ` minutes ago`: ' minute ago')
   }else if(seconds) {
     return `${seconds} seconds ago`
   }else {
