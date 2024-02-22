@@ -38,7 +38,9 @@ export function syncFiles() {
 
 export function markdownToHtml(text) {
   if(!text) return ' '
-  let htmlArr = []
+
+  text = text.replaceAll("<div>", '')
+  text = text.replaceAll("</div>", ' ')
 
   const markup = {
     "###": {
@@ -76,61 +78,30 @@ export function markdownToHtml(text) {
     },
   
   }
-  
-  let divIdx = text.indexOf('<')
-  if(divIdx === -1) {
-    text = `<div>${text}</div>`
-  }else {
-    htmlArr.push(`<div>${text.slice(0, divIdx)}</div>`)
-  }
+  console.log(text);
+  text = text.split(' ')
+  console.log(text);
+  let convertedString = text
 
-  for(let i = 0; i < text.length - 4; i++) {
-    let div = text.slice(i, i + 5)
+
+  // for(let i = 0; i < text.length; i++) {
+  //   let line = text[i]
+  //   let str = line
     
-    function isLetter(str) {
-      return str.length === 1 && str.match(/[a-z]/i);
-    }
+  //   for(let prefix in markup) {
+  //     if(line.slice(0, prefix.length) === prefix) {
+  //       str = markup[prefix].wrap(line)
 
-    function getPrefix(sentence) {
-      let prefix = ''
-      
-      for(let letter of sentence) {
-        if(!isLetter(letter)) {
-          prefix += letter
-        }else {
-          break
-        }
-      }
-
-      return prefix
-    }
+  //       break;      
+  //     }
+  //   }
     
-    if(div === '<div>') {
-      div = text.slice(i, i + 6)
-      let sentence = ''
+  //   console.log(`Str: ${str}`);
+  //   convertedString += str 
+  // }
 
-        while(div !== '</div>' && i < text.length - 4) {
-          sentence += text[i + 5]
-          div = text.slice(i + 6, i + 12)
-          
-          i++
-        }
-        
-        
-        const prefix = getPrefix(sentence)
-        if(prefix === null) {
-          htmlArr.push(sentence)
-        }else {
-          if(prefix in markup) {
-            htmlArr.push(`<div>${markup[prefix].wrap(sentence)}</div>`)
-          }else {
-            htmlArr.push(`<div>${sentence}</div>`)
-          }
-        }
-    }
-  }
-  
-  return htmlArr.join('')
+  // console.log(`Converted: ${convertedString}`);
+  return convertedString
 }
 
 export function themeHandler(palette, index) {

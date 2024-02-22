@@ -86,22 +86,20 @@
 
     .notes {
         height: 100%;
-        overflow: hidden;
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
-        user-select: none;
         gap: .5rem;
-        -ms-overflow-style: none;  /* Internet Explorer 10+ */
-        scrollbar-width: none;  /* Firefox */
+        overflow: hidden;
+        overflow-y: auto;
 
         .note {
             width: 100%;
+            flex: none;
             background-color: $background;
             padding: .75rem 1rem;
             border-radius: 6px;
             text-align: center;
-            transition:300ms ease-in-out;
+            transition: 200ms ease-in-out;
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -110,6 +108,7 @@
                 position: absolute;
                 top: calc(90%);
                 left: 50%;
+                z-index: 0;
                 color: $secondary_text;
                 font-weight: 300;
                 font-size: .75rem;
@@ -137,7 +136,6 @@
 
         .note:hover {
             background-color: $purple30;
-            scale: .90;
 
             .note-last-update {
                 top: calc(100% - 10px);

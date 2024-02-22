@@ -12,7 +12,7 @@ import ThemesModal from './hooks/themesModal';
 
 // File system
 const fs = window.require('fs')
-const VERSION = '0.0.4'
+const VERSION = '0.0.5'
 
 const INITIAL_NOTES = syncFiles()
 function App() {
@@ -40,7 +40,7 @@ function App() {
   })
 
   function searchNotes(search) {
-    if(search.trim() === '') return setNotes(INITIAL_NOTES)
+    if(search.trim() === '') return setNotes(syncFiles())
     const keyword = search.toLowerCase()
     const notesCopy = INITIAL_NOTES
 
@@ -266,18 +266,6 @@ const NoteContent = forwardRef(function(props, ref) {
             props.saveNoteTitle(`${props.note.title}`, `${e.target.value}`)
         }}
         ></input>
-          <svg xmlns="http://www.w3.org/2000/svg" className='svg' viewBox="0 0 23 23" fill="none">
-            <g clipPath="url(#clip0_6_195)">
-              <path d="M7.66671 19.1667L17.7292 9.10417C17.9809 8.85247 18.1806 8.55366 18.3168 8.2248C18.453 7.89593 18.5231 7.54346 18.5231 7.1875C18.5231 6.83155 18.453 6.47907 18.3168 6.15021C18.1806 5.82135 17.9809 5.52254 17.7292 5.27084C17.4775 5.01914 17.1787 4.81948 16.8498 4.68326C16.521 4.54704 16.1685 4.47693 15.8125 4.47693C15.4566 4.47693 15.1041 4.54704 14.7752 4.68326C14.4464 4.81948 14.1476 5.01914 13.8959 5.27084L3.83337 15.3333V19.1667H7.66671Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12.9375 6.22919L16.7708 10.0625" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M15.3334 17.25H19.1667" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            </g>
-          <defs>
-            <clipPath id="clip0_6_195">
-              <rect width="23" height="23" fill="white"/>
-            </clipPath>
-          </defs>
-          </svg>
         </div>
 
         <div className="header-options">  
@@ -388,6 +376,11 @@ function Note(data) {
 
       data.setIsContextOpen(true)
     }}
+    onKeyDown={(e) => {
+      if(e.key === 'Delete') {
+        data.removeNote(`notes/${title}.txt`)
+      }
+    }}
     onMouseEnter={(e) => {
       setLastModified(convertMsToCurrentDate(data.note.lastModified))
     }}
@@ -395,7 +388,9 @@ function Note(data) {
       data.setCurrentIndex(data.note.id)
     }} 
     className={`note ${data.isActive ? 'note-active': '' }`}>
-      <p className="note-last-update">Edited {lastModified}</p>
+      <p 
+      
+      className="note-last-update">Edited {lastModified}</p>
 
       <input 
         onDoubleClick={(e) => {

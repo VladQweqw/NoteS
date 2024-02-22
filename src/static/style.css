@@ -379,7 +379,7 @@ body {
   font-size: 1.75rem;
   font-weight: bold;
   white-space: nowrap;
-  width: 150px;
+  width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -534,24 +534,20 @@ body {
 }
 .sidebar .notes {
   height: 100%;
-  overflow: hidden;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
   gap: 0.5rem;
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+  overflow: hidden;
+  overflow-y: auto;
 }
 .sidebar .notes .note {
   width: 100%;
+  flex: none;
   background-color: var(--background);
   padding: 0.75rem 1rem;
   border-radius: 6px;
   text-align: center;
-  transition: 300ms ease-in-out;
+  transition: 200ms ease-in-out;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -560,6 +556,7 @@ body {
   position: absolute;
   top: 90%;
   left: 50%;
+  z-index: 0;
   color: var(--secondary_text);
   font-weight: 300;
   font-size: 0.75rem;
@@ -583,7 +580,6 @@ body {
 }
 .sidebar .notes .note:hover {
   background-color: var(--color30);
-  scale: 0.9;
 }
 .sidebar .notes .note:hover .note-last-update {
   top: calc(100% - 10px);

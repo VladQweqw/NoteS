@@ -15,7 +15,7 @@ function createWindow() {
         icon: __dirname + '/logo.ico'
     })
 
-    win.loadURL(isDev? "http://localhost:3000": `file://${__dirname}/../build/index.html`)
+    win.loadURL(isDev ? "http://localhost:3000": `file://${__dirname}/../build/index.html`)
 }
 
 
