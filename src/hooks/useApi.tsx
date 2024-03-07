@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-const endpoint = 'http://127.0.0.1:8000/'
+export const endpoint = 'http://192.168.1.69:8000/'
+
 export default function useApi(options: {
     method: 'POST' | 'GET' | 'PUT' | 'DELETE',
     url: string,
@@ -42,7 +43,7 @@ export default function useApi(options: {
     }) {
         setIsLoading(true)
         options.url = endpoint + options.url
-
+        
         axios(options).then((resp) => {
             const data = resp.data
             setData(data)            
