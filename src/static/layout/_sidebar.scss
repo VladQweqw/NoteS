@@ -99,7 +99,6 @@
             padding: .75rem 1rem;
             border-radius: 6px;
             text-align: center;
-            transition: 200ms ease-in-out;
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -162,6 +161,7 @@
     }
 
 }
+
 
 .notes::-webkit-scrollbar { 
     display: none;  /* Safari and Chrome */

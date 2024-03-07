@@ -10,11 +10,10 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
-            contextIsolation: false
+            contextIsolation: false,
         },
         icon: __dirname + '/logo.ico'
     })
-
     win.loadURL(isDev ? "http://localhost:3000": `file://${__dirname}/../build/index.html`)
 }
 

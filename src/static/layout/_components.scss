@@ -1,0 +1,56 @@
+.d-flex {
+    display: flex;
+}
+
+.full-w {
+    width: 100%;
+}
+
+.full-h {
+    width: 100%;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
+
+.note-not-found-wrapper, .page-404 {
+    flex-direction: column;
+    gap: 1rem;
+
+    .go-back {
+        padding: .5rem 1rem;
+        cursor: pointer;
+        background-color: $purple60;
+        color: $text;
+        border-radius: 4px;
+        transition: 200ms ease;
+    }
+
+    h1 {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        font-weight: 400;
+    }
+
+    .err-404 {
+        font-weight: 500;
+        font-size: 6rem;
+        transform: rotate(-15deg);
+        color: $accent;
+        text-shadow: 2px 2px 5px $purple60, 2px 2px 5px $purple30, 2px 2px 5px $accent,;
+    }
+
+    .go-back:hover {
+        background-color: $accent;
+    }
+
+}
+
+.page-404 {
+    height: 100dvh;
+}

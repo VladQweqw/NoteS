@@ -8,7 +8,7 @@ export const COLORS = [
     '#28e034'
   ]
 
-export const THEMES = [
+export const THEMES: themeType[] = [
     {
         name: 'Default',
         palette: {
@@ -68,7 +68,6 @@ export const THEMES = [
             color30: '#A8481F60',
             accent: '#B53A3A',
             background: '#302E1A',
-            background_image: '',
             background_contrast: '#A9923F',
             text: '#FFFFFF',
             secondary_text: '#FFFFFF80',
@@ -82,7 +81,6 @@ export const THEMES = [
             color30: '#A8481F',
             accent: '#FF5C00',
             background: '#E68615',
-            background_image: '',
             background_contrast: '#F2DF7C',
             text: '#000000',
             secondary_text: '#00000080',
@@ -91,3 +89,30 @@ export const THEMES = [
     },
 ]
 
+
+export const animation_fade = {
+    hidden: {
+        transform: 'translateY(50%) scale(0)'
+    },
+    visible: {
+        transform: 'translateY(0%) scale(1)'
+    }
+}
+
+export const scale = {
+    hidden: {
+        x: "10%",
+
+        opacity: 0,
+    },
+    
+    visible: {
+        x: "0%",
+        opacity: 1,
+        transition: {
+            ease: 'easeInOut',
+            duration: '.3'
+        }
+
+    }
+}

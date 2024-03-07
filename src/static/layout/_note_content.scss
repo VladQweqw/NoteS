@@ -23,7 +23,8 @@ background: $purple30;
     display: grid;
     grid-template-rows: 75px 1fr;
     gap: .5rem;
-    
+    transition: 200ms ease-in-out;
+
     .save-alert {
         position: absolute;
         top: calc(100% - 66px);
@@ -39,6 +40,7 @@ background: $purple30;
         transition: 200ms ease;
         opacity: 0;
         scale: 0;
+
         svg {
             path {
                 stroke:  $text;
@@ -107,10 +109,8 @@ background: $purple30;
         position: relative;
         gap: .5rem;
     
-        .title-wrapper {
+        .title-wrapper { 
             display: flex;
-            align-items: center;
-            justify-content: flex-start;
 
             .note-title {
                 background-color: transparent;
@@ -125,9 +125,27 @@ background: $purple30;
             }
     
             .svg {
-                width: 25px;
-                height: 25px;
+                cursor: pointer;
+                transition: 200ms ease;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
 
+                path {
+                    transition: 200ms ease;
+
+                }
+            }
+
+            .svg:active {
+                scale: .9;
+            }
+
+            .svg:hover {
+                path {
+                    stroke: $secondary_text;
+                }
             }
     
         }
@@ -196,6 +214,10 @@ background: $purple30;
             }
         }
     }
+}
+
+.note-conte-wrapper-active {
+    width: 100vw;
 }
 
 .text-colors {
