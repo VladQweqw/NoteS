@@ -16,7 +16,7 @@ import ThemesModal from './components/themesModal';
 import Loading from './components/loading';
 
 // File system
-const VERSION = '0.9.1'
+const VERSION = '0.9.2'
 
 function App() {
   const navigate = useNavigate();
