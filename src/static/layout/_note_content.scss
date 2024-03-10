@@ -22,6 +22,7 @@ background: $purple30;
     padding-left: 0;
     display: grid;
     grid-template-rows: 75px 1fr;
+    width: 100%;
     gap: .5rem;
     transition: 200ms ease-in-out;
 
@@ -111,15 +112,15 @@ background: $purple30;
     
         .title-wrapper { 
             display: flex;
-
+            
             .note-title {
                 background-color: transparent;
                 color: $text;
                 font-size: 1.75rem;
                 font-weight: bold;
                 white-space: nowrap; 
-                width: 250px; 
                 overflow: hidden;
+                width: max(100%, 100px);
                 text-overflow: ellipsis; 
                 
             }
@@ -182,19 +183,54 @@ background: $purple30;
         border: none;
         border-radius: 50%;
     }
+    
 
     .header-options {
         display: flex;
         gap: 1rem;
         align-items: center;
-        
+
+        #font-options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .font-option {
+                cursor: pointer;
+                width: 35px;
+                height: 35px;
+                font-size: 1.35rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: 200ms ease;
+            }
+
+            .font-option:hover {
+                color: $secondary_text;
+                
+            }
+
+            .font-option-active {
+                text-decoration: underline;
+            }
+
+            .font-option:nth-child(2) {
+                font-weight: bold;
+            }
+
+            .font-option:nth-child(3) {
+                font-style: italic;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            
+        }
 
         .svg {
             width: 30px;
             cursor: pointer;
             height: 30px;
             transition: 200ms ease;
-            
 
             path {
                 transition: 200ms ease;
@@ -202,6 +238,7 @@ background: $purple30;
                 
             }
         }
+
 
         .svg:active {
             scale: .8;
@@ -216,7 +253,7 @@ background: $purple30;
     }
 }
 
-.note-conte-wrapper-active {
+.note-content-wrapper-active {
     width: 100vw;
 }
 

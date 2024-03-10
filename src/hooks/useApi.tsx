@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-export const endpoint = 'http://192.168.1.69:8000/'
+export const endpoint = 'http://192.168.111.1:8000/'
 
 export default function useApi(options: {
     method: 'POST' | 'GET' | 'PUT' | 'DELETE',

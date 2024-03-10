@@ -13,6 +13,7 @@ import './static/style.css'
 // Hooks
 import Context from './components/context';
 import ThemesModal from './components/themesModal';
+import Loading from './components/loading';
 
 // File system
 const VERSION = '0.9.1'
@@ -34,9 +35,7 @@ function App() {
   const [isThemesModalOpen, setIsThemesModalOpen] = useState(false)
   const [notes, setNotes] = useState<NoteType[]>([])
   const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
-  const [isSaved, setIsSaved] = useState(true)
   const [sortedAscdending, setSortedAscdending] = useState(false)
-  const [colorsIndex, setColorsIndex] = useState(0)
   const [toggleSidebar, setToggleSidebar] = useState<boolean>(false)
   const [contextData, setContextData] = useState<ContextDataType>({
     top: 0,
@@ -44,6 +43,7 @@ function App() {
     noteWidth: 0,
     note_id: 0,
   })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   function searchNotes(search: string) {
     let filtered_notes = notes.filter((note: NoteType) => {
@@ -61,6 +61,8 @@ function App() {
   }
 
   function getNotes() {
+    setIsLoading(true)
+
     callApi({
       method: 'POST',
       headers: {},
@@ -68,11 +70,16 @@ function App() {
           'user': user_id,
       },
       url: "notes/"
-    }).then((data) => {
+    })
+    .then((data) => {
       if(data)
         setNotes(data)
         setFilteredNotes(data)
     })
+    .finally(() => {      
+      setIsLoading(false)
+    })
+
   }
 
   function createNote() {
@@ -89,9 +96,7 @@ function App() {
       headers: {},
       data: data,
       url: "notes/add/"
-    }).then((resp) => {   
-      console.log(resp);
-      
+    }).then((resp) => {         
       getNotes()
     })
 
@@ -112,10 +117,7 @@ function App() {
       headers: {},
       data: data,
       url: `notes/delete/${note_id}/`
-    }).then((resp) => {  
-      console.log(resp);
-        console.log(ok);
-        
+    }).then((resp) => {          
       getNotes()
 
       if(ok)  
@@ -162,7 +164,7 @@ function App() {
       mainRef.current!.classList.remove('main-active')
 
     }
-
+    
   }, [])
 
   useEffect(() => {
@@ -173,7 +175,7 @@ function App() {
     }
   }, [toggleSidebar])
   
-
+  
   return (
     <main
     ref={mainRef}
@@ -188,6 +190,7 @@ function App() {
           </div>
 
           <div className="sidebar-options">
+
             <span onClick={() => {
               sortNotes()
             }}>
@@ -202,6 +205,31 @@ function App() {
                   </clipPath>
                   </defs>
               </svg>
+            </span>
+
+            <span 
+            className='refresh-svg'
+            onClick={(e) => {
+              (e.target as HTMLSpanElement).style.animation = `rotate 300ms ease-in-out backwards`
+              setTimeout(() => {
+                (e.target as HTMLSpanElement).style.animation = ``
+                getNotes()
+              }, 300);
+
+            }}>
+              <svg
+               className='svg' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_121_14137)">
+              <path d="M20 11.0002C19.7554 9.24041 18.9391 7.60985 17.6766 6.35969C16.4142 5.10953 14.7758 4.30911 13.0137 4.08175C11.2516 3.85438 9.46362 4.21268 7.9252 5.10144C6.38678 5.9902 5.18325 7.36013 4.5 9.00019M4 5.00019V9.00019H8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 13C4.24456 14.7598 5.06093 16.3903 6.32336 17.6405C7.58579 18.8907 9.22424 19.6911 10.9863 19.9184C12.7484 20.1458 14.5364 19.7875 16.0748 18.8988C17.6132 18.01 18.8168 16.6401 19.5 15M20 19V15H16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_121_14137">
+              <rect width="24" height="24" fill="white"/>
+              </clipPath>
+              </defs>
+          </svg>
+
             </span>
 
             <span onClick={() => {
@@ -223,6 +251,7 @@ function App() {
                 </svg>
               </span>
             </span>
+
           </div>
 
         </div>
@@ -230,23 +259,26 @@ function App() {
         <div
             className="bottom-sidebar notes sidebar-side" 
             id='notes'> 
-                {filteredNotes.length > 0 ? filteredNotes?.map((note: NoteType, index: number) => {
-                  return <Note 
-                  index={index}
-                  isActive={note.id === Number(id)}
-                  setContextData={setContextData}
-                  removeNote={removeNote} 
-                  setIsContextOpen={setIsContextOpen}
-                  note={note}
-                  class={
-                    `${index === 0 ? 'note-active' : ''}`
-                  } 
-                  key={index} />
-                }):
-                <div className="no-content-wrapper">
-                  <p className='no-data-text' onClick={() => createNote()}>No notes yet, create one!</p>
-                </div>
-                }
+               {isLoading ? <Loading /> : 
+               (filteredNotes.length > 0) ? filteredNotes?.map((note: NoteType, index: number) => {
+                return <Note 
+                index={index}
+                isActive={note.id === Number(id)}
+                setContextData={setContextData}
+                removeNote={removeNote} 
+                setIsContextOpen={setIsContextOpen}
+                note={note}
+                class={
+                  `${index === 0 ? 'note-active' : ''}`
+                } 
+                key={index} />
+              }):
+              <div className="no-content-wrapper">
+                <p className='no-data-text' onClick={() => createNote()}>No notes yet, create one!</p>
+              </div>
+              }
+               
+                
         </div>
 
         <div className="sidebar-footer sidebar-side">
@@ -273,10 +305,6 @@ function App() {
 
       <Outlet 
         context={[
-          colorsIndex, 
-          setColorsIndex,
-          setIsSaved,
-          isSaved,
           getNotes,
           toggleSidebar,
           setToggleSidebar
@@ -306,7 +334,7 @@ function Note(data: {
   index: number
 }) {
   const navigate = useNavigate()
-
+  
   const note = useRef<any>(null)
 
   const [title, setTitle] = useState(data.note.title)

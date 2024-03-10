@@ -6,7 +6,23 @@ export const COLORS = [
     '#8728e0',
     '#d728e0',
     '#28e034'
-  ]
+]
+
+export const Fonts: fontType[] = [
+    {
+        name: '',
+        fontFamily: ''
+    },
+    {
+        name: 'B',
+        fontFamily: 'bold'
+    },
+    {
+        name: 'i',
+        fontFamily: 'italic'
+    },
+
+]
 
 export const THEMES: themeType[] = [
     {
@@ -85,6 +101,71 @@ export const THEMES: themeType[] = [
             text: '#000000',
             secondary_text: '#00000080',
             third_text: '#00000060',
+        }
+    },
+    {
+        name: 'War Tiger',
+        palette: {
+            color60: '#4B2B8E',
+            color30: '#2A1E44',
+            accent: '#9C3EBD',
+            background: '#181818',
+            background_contrast: '#202020',
+            text: '#FFFFFF',
+            secondary_text: '#FFFFFF80',
+            third_text: '#FFFFFF40',
+        }
+    },
+    {
+        name: 'Default',
+        palette: {
+            color60: '#4B2B8E',
+            color30: '#2A1E44',
+            accent: '#9C3EBD',
+            background: '#181818',
+            background_contrast: '#202020',
+            text: '#FFFFFF',
+            secondary_text: '#FFFFFF80',
+            third_text: '#FFFFFF40',
+        }
+    },
+    {
+        name: 'Default',
+        palette: {
+            color60: '#4B2B8E',
+            color30: '#2A1E44',
+            accent: '#9C3EBD',
+            background: '#181818',
+            background_contrast: '#202020',
+            text: '#FFFFFF',
+            secondary_text: '#FFFFFF80',
+            third_text: '#FFFFFF40',
+        }
+    },
+    {
+        name: 'Default',
+        palette: {
+            color60: '#4B2B8E',
+            color30: '#2A1E44',
+            accent: '#9C3EBD',
+            background: '#181818',
+            background_contrast: '#202020',
+            text: '#FFFFFF',
+            secondary_text: '#FFFFFF80',
+            third_text: '#FFFFFF40',
+        }
+    },
+    {
+        name: 'Default',
+        palette: {
+            color60: '#4B2B8E',
+            color30: '#2A1E44',
+            accent: '#9C3EBD',
+            background: '#181818',
+            background_contrast: '#202020',
+            text: '#FFFFFF',
+            secondary_text: '#FFFFFF80',
+            third_text: '#FFFFFF40',
         }
     },
 ]

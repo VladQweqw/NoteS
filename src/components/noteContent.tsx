@@ -6,22 +6,25 @@ import NoteNotFound from "./noteNotFound";
 import { callApi } from "../hooks/apis";
 import { motion } from "framer-motion";
 import Loading from "./loading";
+import { Fonts } from "../assets/data";
 
 export function NoteContent() {
-  const noteContent = useRef<HTMLPreElement | null>(null)
+  const noteContent = useRef<HTMLDivElement | null>(null)
 
   const [note, setNote] = useState<NoteType | null>(null)
   const [noteTitle, setNoteTitle] = useState<string>('')
   const [isTextWrap, setIsTextWrap] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
-
+  const [colorsIndex, setColorsIndex] = useState(0)
+  const [fontIndex, setFontIndex] = useState<number>(0)
+  const [isSaved, setIsSaved] = useState(true)
+  
   const { id } = useParams()
 
-  const [colorsIndex, setColorsIndex, setIsSaved, isSaved, getNotes, toggleSidebar, setToggleSidebar]: any = useOutletContext();
+  const [getNotes, toggleSidebar, setToggleSidebar]: any = useOutletContext();
   
-  useEffect(() => {
-    setIsLoading(true)
+  function getNoteContent() {
     callApi({
       method: "POST",
       url: `notes/${id}/`,
@@ -45,10 +48,15 @@ export function NoteContent() {
       setIsError(true)
     })
     .finally(() => setIsLoading(false))
+  }
+
+  useEffect(() => {
+    setIsLoading(true)
+    getNoteContent()
     
   }, [id])
 
-  function saveNote() {
+  function saveNote() {    
     callApi({
       method: 'PUT',
       headers: {},
@@ -56,7 +64,7 @@ export function NoteContent() {
         "user": localStorage.getItem('user_id'),
         "title": noteTitle,
         "content": noteContent.current!.innerHTML,
-        "lastUpdate": new Date().getMilliseconds()
+        "lastUpdate": new Date().getTime()
       },
       url: `notes/update/${id}/`
     }).then((data) => {
@@ -68,14 +76,13 @@ export function NoteContent() {
       }
     })
   }
-    
+
   if(isLoading) return <Loading />
   if(isError) return <NoteNotFound />
-
   if(note) {    
     return (<article   
       onBlur={() => saveNote()}  
-      className={`${toggleSidebar ? "note-conte-wrapper-active": ""} note-content-wrapper`}>
+      className={`${toggleSidebar ? "note-content-wrapper-active": ""} note-content-wrapper`}>
           <header className="note-content-header">
             <motion.div
             variants={scale}
@@ -119,9 +126,34 @@ export function NoteContent() {
                 setNoteTitle(e.target.value);
               }}
             ></input>
+            
             </motion.div>
     
             <div className="header-options">  
+                <div className="font-options-wrapper">
+                  <div
+                  id="font-options">
+                      {Fonts.map((font: fontType, index: number) => {
+                        return <span 
+                        className="font-option" 
+                        key={index}
+                        onClick={(e) => {
+                          document.querySelectorAll('.font-option').forEach((item) => item.classList.remove('font-option-active'));
+
+                          if(fontIndex === index) {
+                            setFontIndex(0);
+
+                          }else {
+                            setFontIndex(index);
+                            (e.target as HTMLSpanElement).classList.add('font-option-active');
+                          }
+                          
+                        }}
+                        >{font.name}</span>
+                      })}
+                  </div>
+                </div>
+
                 <div className="text-colors">
                   {COLORS.map((color, index) => {
                     return <span 
@@ -135,7 +167,6 @@ export function NoteContent() {
                     ></span>
                   })}
                 </div>
-    
                 {
                   isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_7_14260)">
@@ -163,10 +194,35 @@ export function NoteContent() {
                       </defs>
                   </svg>
                 }
+
+                <span 
+                className='refresh-svg'
+                onClick={(e) => {
+                  (e.target as HTMLSpanElement).style.animation = `rotate 300ms ease-in-out backwards`
+                  setTimeout(() => {
+                    (e.target as HTMLSpanElement).style.animation = ``
+                    getNoteContent()
+                  }, 300);
+
+                }}>
+                    <svg
+                    className='svg' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clipPath="url(#clip0_121_14137)">
+                    <path d="M20 11.0002C19.7554 9.24041 18.9391 7.60985 17.6766 6.35969C16.4142 5.10953 14.7758 4.30911 13.0137 4.08175C11.2516 3.85438 9.46362 4.21268 7.9252 5.10144C6.38678 5.9902 5.18325 7.36013 4.5 9.00019M4 5.00019V9.00019H8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M4 13C4.24456 14.7598 5.06093 16.3903 6.32336 17.6405C7.58579 18.8907 9.22424 19.6911 10.9863 19.9184C12.7484 20.1458 14.5364 19.7875 16.0748 18.8988C17.6132 18.01 18.8168 16.6401 19.5 15M20 19V15H16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_121_14137">
+                    <rect width="24" height="24" fill="white"/>
+                    </clipPath>
+                    </defs>
+                    </svg>
+                </span>
+
             </div>
           </header>
-    
-          <motion.pre
+                
+          <motion.div
           variants={scale}
           animate="visible"
           initial="hidden"
@@ -174,6 +230,7 @@ export function NoteContent() {
             dangerouslySetInnerHTML={{__html: note.content}}
             onClick={() => {
               document.execCommand('foreColor', false, COLORS[colorsIndex])
+              document.execCommand(Fonts[fontIndex].fontFamily, false);
             }}
             onKeyDown={(e) => {
               setIsSaved(false)
@@ -182,12 +239,11 @@ export function NoteContent() {
               }
             }}
             className={`${isTextWrap ? 'note-content-wrap' : ''}`}
-            id="note-content" 
-            
+            id="note-content"
             contentEditable={true}
           >
           
-          </motion.pre>
+          </motion.div>
           
           <div 
           className={`save-alert ${!isSaved ? 'save-alert-active': ''}`}

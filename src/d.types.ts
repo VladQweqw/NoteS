@@ -9,6 +9,10 @@ type paletteType = {
     third_text: string, 
 }
 
+type fontType = {
+    name: string,
+    fontFamily: string
+}
 type themeType = {
     name: string,
     palette: paletteType

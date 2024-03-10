@@ -181,3 +181,18 @@
     text-decoration: underline;
 
 }
+
+.refresh-svg {
+    transition: 200ms ease-in;
+    height: 30px;
+}
+
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

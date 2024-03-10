@@ -22,69 +22,67 @@ export function getNewName(notes: NoteType[]) {
 
 export function markdownToHtml(text: string) {
   if(!text) return ' '
-
-  text = text.replaceAll("<div>", '')
-  text = text.replaceAll("</div>", ' ')
-
-  // const markup = {
-  //   "###": {
-  //     start: '<h1>',
-  //     end: "</h1>",
-  //     wrap: function(text: string) {
-  //       return this.start + text.slice(3) + this.end 
-  //     }
-  //   },
-  //   "##": {
-  //     start: '<h2>',
-  //     end: "</h2>",
-  //     wrap: function(text: string) {
-  //       return this.start + text.slice(2) + this.end 
-  //     }
-  //   },
-  //   "#": {
-  //     start: '<h3>',
-  //     end: "</h3>",
-  //     wrap: function(text: string) {
-  //       return this.start + text.slice(1) + this.end 
-  //     }
-  //   },
-  //   "%%": {
-  //     start: '<div class="content-tag">',
-  //     end: "</div>",
-  //     wrap: function(text: string) {
-  //       return "<br>" + this.start + text.slice(2) + this.end
-  //     }
-  //   },
-  //   "!(": {
-  //     wrap: function(text: string) {
-  //       return `<br><img class="content-image" alt="URL INVALID" src="${text.slice(2, -1)}" />`
-  //     }
-  //   },
   
-  // }
+  text = text.replaceAll("<div>", '')
+  text = text.replaceAll('&nbsp;', '<br>')
+  let textArr = text.split("</div>")
+  
+  if(textArr.length === 1) {
+    textArr[0] = `<div>${textArr[0]}</div>`
+  }
+  
+  const markdownElements: any = {
+    "###": {
+      start: '<h1>',
+      end: "</h1>",
+      wrap: function(text: string) {
+        return this.start + text.slice(3) + this.end 
+      }
+    },
+    "##": {
+      start: '<h2>',
+      end: "</h2>",
+      wrap: function(text: string) {
+        return this.start + text.slice(2) + this.end 
+      }
+    },
+    "#": {
+      start: '<h3>',
+      end: "</h3>",
+      wrap: function(text: string) {
+        return this.start + text.slice(1) + this.end 
+      }
+    },
+    "%%": {
+      start: '<div class="content-tag">',
+      end: "</div>",
+      wrap: function(text: string) {
+        return "<br>" + this.start + text.slice(2) + this.end
+      }
+    },
+    "!(": {
+      wrap: function(text: string) {
+        return `<br><img class="content-image" alt="URL INVALID" src="${text.slice(2, -1)}" />`
+      }
+    },
+  
+  }
 
-  // let text_split = text.split(' ')
-  let convertedString = text
+  for(let idx in textArr) {    
+    let line = textArr[idx]
 
+    for(let prefix in markdownElements) {
+      let wordPrefix = line.slice(0, prefix.length)      
+      if(wordPrefix === prefix) {
+        let newLine = markdownElements[prefix].wrap(line.slice(wordPrefix.length - 1))
+        console.log(line, newLine);
+        
+        textArr[idx] = `<div>${newLine}</div>`
+      }
+    }
+  }
 
-  // for(let i = 0; i < text.length; i++) {
-  //   let line = text[i]
-  //   let str = line
-    
-  //   for(let prefix in markup) {
-  //     if(line.slice(0, prefix.length) === prefix) {
-  //       str = markup[prefix].wrap(line)
-
-  //       break;      
-  //     }
-  //   }
-    
-  //   console.log(`Str: ${str}`);
-  //   convertedString += str 
-  // }
-
-  // console.log(`Converted: ${convertedString}`);
-  return convertedString
+  return textArr.join('')
 }
 
 export function themeHandler(palette: paletteType, index: number) {
@@ -99,9 +97,9 @@ export function themeHandler(palette: paletteType, index: number) {
 
 export function convertTimeDifference(creation_date: string, last_update: string) {
   const date = new Date(last_update)
-  var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
-  
-  return `${date.getDate()} ${month[date.getMonth()]} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  var fullMonth = ["January", "February", "March", "April", "May", "June", "July","August", "September", "Octomber", "November", "December"];
+    
+  return `${date.getDate()} ${fullMonth[date.getMonth()]}`
 
   // const seconds = Math.floor(diff / 3600);
 

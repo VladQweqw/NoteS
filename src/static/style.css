@@ -300,8 +300,10 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   grid-auto-rows: 75px;
   height: 100%;
+  max-height: 275px;
   gap: 1rem;
   overflow: hidden;
+  overflow-y: auto;
 }
 .themes-modal .themes-wrapper .theme {
   display: flex;
@@ -472,6 +474,7 @@ body {
   padding-left: 0;
   display: grid;
   grid-template-rows: 75px 1fr;
+  width: 100%;
   gap: 0.5rem;
   transition: 200ms ease-in-out;
 }
@@ -553,8 +556,8 @@ body {
   font-size: 1.75rem;
   font-weight: bold;
   white-space: nowrap;
-  width: 250px;
   overflow: hidden;
+  width: max(100%, 100px);
   text-overflow: ellipsis;
 }
 .note-content-wrapper .note-content-header .title-wrapper .svg {
@@ -605,6 +608,34 @@ body {
   gap: 1rem;
   align-items: center;
 }
+.note-content-wrapper .header-options #font-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.note-content-wrapper .header-options #font-options .font-option {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  font-size: 1.35rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 200ms ease;
+}
+.note-content-wrapper .header-options #font-options .font-option:hover {
+  color: var(--secondary_text);
+}
+.note-content-wrapper .header-options #font-options .font-option-active {
+  text-decoration: underline;
+}
+.note-content-wrapper .header-options #font-options .font-option:nth-child(2) {
+  font-weight: bold;
+}
+.note-content-wrapper .header-options #font-options .font-option:nth-child(3) {
+  font-style: italic;
+  font-family: "Courier New", Courier, monospace;
+}
 .note-content-wrapper .header-options .svg {
   width: 30px;
   cursor: pointer;
@@ -622,7 +653,7 @@ body {
   stroke: var(--secondary_text);
 }
 
-.note-conte-wrapper-active {
+.note-content-wrapper-active {
   width: 100vw;
 }
 
@@ -807,6 +838,19 @@ body {
   text-decoration: underline;
 }
 
+.refresh-svg {
+  transition: 200ms ease-in;
+  height: 30px;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .form-main {
   display: flex;
   justify-content: center;

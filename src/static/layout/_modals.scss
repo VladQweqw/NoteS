@@ -20,7 +20,7 @@
     padding: 1rem;
     max-width: 900px;
     width: 100%;
-    height: 600px;
+    height: 600px;    
     overflow-y: auto;
     background-color: $background_contrast;
     border-radius: 8px;
@@ -30,6 +30,7 @@
         display: grid;
         grid-template-rows: 75px auto;
         gap: 1rem;
+
     }
 
     .themes-title {
@@ -50,8 +51,10 @@
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
         grid-auto-rows: 75px;
         height: 100%;
+        max-height: 275px;
         gap: 1rem;
         overflow: hidden;
+        overflow-y: auto;
 
         .theme {
             display: flex;
