@@ -406,17 +406,20 @@ body {
 
 .user-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
   gap: 1rem;
-  grid-auto-flow: dense;
   width: 100%;
   height: 100%;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+  grid-auto-rows: 75px;
 }
 
 .user-detail {
   border: 1px solid var(--secondary_text);
   text-align: center;
-  padding: 0.5rem 0rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;

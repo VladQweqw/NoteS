@@ -153,6 +153,12 @@ function AccountDetails() {
     }}>
         <h4>{error}</h4>
         <p className='secondary-text'>Please try again later</p>
+        <p 
+        onClick={() => {
+            localStorage.clear()
+            navigate('/accounts/login/')
+        }}
+        >Clear cache</p>
     </div>
 
     if(isLoading) return <Loading />
@@ -178,6 +184,16 @@ function AccountDetails() {
                     <button 
                     onClick={() => deleteUser()}
                     className="log-out">Delete User</button>
+                    
+                </div>
+
+                <div className="user-detail danger-detail">
+                    <button 
+                    onClick={() => {
+                        localStorage.clear()
+                        navigate('/accounts/login/')
+                    }}
+                    className="log-out">Clear Cache & logout</button>
                     
                 </div>
                 

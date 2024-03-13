@@ -18,7 +18,7 @@ function createWindow() {
 
     setTimeout(() => {
         win.loadURL(isDev ? "http://localhost:3000": `file://${__dirname}/../build/index.html`)
-    }, 2000);
+    }, 5000);
 }
 
 

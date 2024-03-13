@@ -127,13 +127,13 @@ function App() {
 
   function sortNotes() {
     let sorted_notes = []
-
+    
     if(sortedAscdending) {
-      sorted_notes = filteredNotes.sort((a: any, b: any): any => {
+      sorted_notes = filteredNotes.sort((a: NoteType, b: NoteType): any => {
         return a.title > b.title
       })
     }else {
-      sorted_notes = filteredNotes.sort((a: any, b: any): any => {
+      sorted_notes = filteredNotes.sort((a: NoteType, b: NoteType): any => {
         return b.title > a.title
       })
     }
