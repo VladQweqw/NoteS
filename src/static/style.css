@@ -480,6 +480,7 @@ body {
   width: 100%;
   gap: 0.5rem;
   transition: 200ms ease-in-out;
+  position: relative;
 }
 .note-content-wrapper .save-alert {
   position: absolute;
@@ -488,14 +489,14 @@ body {
   height: 45px;
   display: grid;
   place-items: center;
-  right: 1rem;
+  left: calc(100% - 1rem - 45px);
   background-color: var(--color60);
   cursor: pointer;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1882352941);
   border-radius: 100%;
   transition: 200ms ease;
-  opacity: 0;
-  scale: 0;
+  opacity: 1;
+  scale: 1;
 }
 .note-content-wrapper .save-alert svg path {
   stroke: var(--text);
