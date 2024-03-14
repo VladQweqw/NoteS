@@ -9,7 +9,7 @@ import Loading from "./loading";
 import { Fonts } from "../assets/data";
 
 export function NoteContent() {
-  const noteContent = useRef<HTMLDivElement | null>(null)
+  const noteContent = useRef<HTMLPreElement | null>(null)
 
   const [note, setNote] = useState<NoteType | null>(null)
   const [noteTitle, setNoteTitle] = useState<string>('')
@@ -76,9 +76,11 @@ export function NoteContent() {
       }
     })
   }
-
+    
   if(isLoading) return <Loading />
   if(isError) return <NoteNotFound />
+  console.log(note?.content);
+  
   if(note) {    
     return (<article   
       onBlur={() => saveNote()}  
@@ -222,7 +224,7 @@ export function NoteContent() {
             </div>
           </header>
                 
-          <motion.div
+          <motion.pre
           variants={scale}
           animate="visible"
           initial="hidden"
@@ -243,7 +245,7 @@ export function NoteContent() {
             contentEditable={true}
           >
           
-          </motion.div>
+          </motion.pre>
           
           <div 
           className={`save-alert ${!isSaved ? 'save-alert-active': ''}`}

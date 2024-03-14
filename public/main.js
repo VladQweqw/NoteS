@@ -14,7 +14,7 @@ function createWindow() {
         },
         icon: __dirname + '/logo.ico'
     })
-    win.setMenuBarVisibility(false)
+    // win.setMenuBarVisibility(false)
 
     setTimeout(() => {
         win.loadURL(isDev ? "http://localhost:3000": `file://${__dirname}/../build/index.html`)
