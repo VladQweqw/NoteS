@@ -21,7 +21,6 @@ export function NoteContent() {
   const [isSaved, setIsSaved] = useState(true)
   
   const { id } = useParams()
-
   const [getNotes, toggleSidebar, setToggleSidebar]: any = useOutletContext();
   
   function getNoteContent() {
@@ -71,18 +70,23 @@ export function NoteContent() {
       console.log(data);
       
       if(data) {
-        getNotes()
         setIsSaved(true)
+        getNotes()
       }
     })
   }
+
+  useEffect(() => {
+    console.log(isSaved);
+    
+  }, [isSaved])
+  
     
   if(isLoading) return <Loading />
   if(isError) return <NoteNotFound />
-  console.log(note?.content);
   
   if(note) {    
-    return (<article   
+    return (<article 
       onBlur={() => saveNote()}  
       className={`${toggleSidebar ? "note-content-wrapper-active": ""} note-content-wrapper`}>
           <header className="note-content-header">
@@ -124,8 +128,8 @@ export function NoteContent() {
               className="note-title"
               value={noteTitle}
               onChange={(e) => {
-                setIsSaved(false)
                 setNoteTitle(e.target.value);
+                setIsSaved(false)
               }}
             ></input>
             
@@ -235,10 +239,13 @@ export function NoteContent() {
               document.execCommand(Fonts[fontIndex].fontFamily, false);
             }}
             onKeyDown={(e) => {
-              setIsSaved(false)
               if(e.ctrlKey && e.key.toLowerCase() === 's') {
                 saveNote()
+                setIsSaved(true)
+              }else {
+                setIsSaved(false)
               }
+
             }}
             className={`${isTextWrap ? 'note-content-wrap' : ''}`}
             id="note-content"
@@ -247,8 +254,8 @@ export function NoteContent() {
           
           </motion.pre>
           
-          <div 
-          className={`save-alert ${!isSaved ? 'save-alert-active': ''}`}
+         <div 
+          className={`save-alert ${!isSaved ? 'save-alert-active': ""}`}
           onClick={() => {
             saveNote()
           }}

@@ -16,7 +16,7 @@ import ThemesModal from './components/themesModal';
 import Loading from './components/loading';
 
 // File system
-const VERSION = '0.9.2'
+const VERSION = '0.9.4'
 
 function App() {
   const navigate = useNavigate();
@@ -178,6 +178,12 @@ function App() {
   
   return (
     <main
+    onKeyDown={(e) => {        
+      if(e.key === 'Tab') {        
+        setToggleSidebar((toggleSidebar: boolean) => !toggleSidebar)
+      }
+      // e.preventDefault() uncomment in prodution
+    }}
     ref={mainRef}
     className="notes-main">
       <div 
