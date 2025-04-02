@@ -1,9 +1,39 @@
+import { useEffect } from "react"
+import Loading from "../../../components/loading"
+import useApi from "../../../hooks/useApi"
+import { useNavigate } from "react-router";
 
 export default function TopSidebar(props: {
   searchNotes: (args0: string) => void,
   sortNotes: () => void,
   sortedAscdending: boolean
-}) {  
+}) {
+  const navigate = useNavigate();
+  const user_id = localStorage.getItem("user_id") || ""
+
+  const { data, isLoading, error, call } = useApi()
+
+  function createNote() {
+    call({
+      url: `/note`,
+      data: {
+        title: "Untitled",
+        content: "",
+        author: user_id
+      },
+      headers: {},
+      method: 'POST'
+    })
+  }
+
+  useEffect(() => {
+    if (data?.id) {
+      navigate("/")
+    }
+  }, [data])
+
+  if (error) console.log(error);
+  if (isLoading) return <Loading />
 
   return (
     <div className="top-sidebar sidebar-side">
@@ -32,7 +62,9 @@ export default function TopSidebar(props: {
 
         <span onClick={() => {
         }} className="filter">
-          <span className="create-note" id='create-note'>
+          <span
+          onClick={() => createNote()}
+          className="create-note" id='create-note'>
             <svg className='svg' viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_11_14244)">
                 <path d="M17.4167 3.5V8.16667C17.4167 8.47609 17.544 8.77283 17.7706 8.99162C17.9972 9.21042 18.3045 9.33333 18.625 9.33333H23.4583" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

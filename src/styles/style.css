@@ -372,6 +372,7 @@ body {
   color: var(--text);
   display: grid;
   transition: 200ms ease;
+  z-index: 1000000000000000000000000;
   pointer-events: none;
   scale: 0;
 }

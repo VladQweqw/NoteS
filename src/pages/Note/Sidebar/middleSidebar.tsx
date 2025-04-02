@@ -1,5 +1,9 @@
 import { useParams } from "react-router"
 import Note from "../note"
+import useApi from "../../../hooks/useApi"
+import { useEffect } from "react"
+import { useNavigate } from "react-router"
+import Loading from "../../../components/loading"
 
 export default function MiddleSidebar(props: {
     setFilteredNotes: (args0: any) => void,
@@ -9,6 +13,32 @@ export default function MiddleSidebar(props: {
     setContextData: (args0: ContextDataType) => void
  }) {
     const { id } = useParams()
+    const user_id = localStorage.getItem("user_id") || ""
+    const navigate = useNavigate();
+
+    const { data, isLoading, error, call} = useApi()
+    
+    function createNote() {
+        call({
+            url: `/note`,
+            data: {
+                title: "Untitled",
+                content: "",
+                author: user_id
+            },
+            headers: {},
+            method: 'POST'
+          })
+    }
+
+    useEffect(() => {
+        if(data?.id) {
+            navigate("/")
+        }
+    }, [data])
+    
+    if(error) console.log(error);
+    if(isLoading) return <Loading />
     
     return (
         <div className="middle-sidebar notes sidebar-side"
@@ -26,7 +56,9 @@ export default function MiddleSidebar(props: {
                     key={index} />
             }) :
                 <div className="no-content-wrapper">
-                    <p className='no-data-text' >No notes yet, create one!</p>
+                    <p 
+                    onClick={() => createNote()}
+                    className='no-data-text' >No notes yet, create one!</p>
                 </div>
             }
         </div>

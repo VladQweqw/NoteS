@@ -137,6 +137,7 @@
     color: $text;
     display: grid;
     transition: 200ms ease;
+    z-index: 999999999999999999999999;
     pointer-events: none;
     scale: 0;
 

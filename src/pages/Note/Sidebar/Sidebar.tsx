@@ -75,7 +75,6 @@ export default function Sidebar(props: {
          />
 
          <Context
-            removeNote={() => { }}
             isContextOpen={isContextOpen}
             setIsContextOpen={setIsContextOpen}
             contextData={contextData} />

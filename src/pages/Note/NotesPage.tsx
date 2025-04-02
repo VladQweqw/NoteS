@@ -9,112 +9,109 @@ import useApi from '../../hooks/useApi';
 import Sidebar from './Sidebar/Sidebar';
 import ThemesModal from '../../components/themesModal';
 
+import { useLocation } from 'react-router-dom';
+import Loading from '../../components/loading';
 
 export default function NotesPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const user_id = Number(localStorage.getItem('user_id')) || 0
-    
-    // Theme auto-update due to user's settings
-    const index = parseInt(localStorage.getItem('themeIndex') || '') || 0
-    themeHandler(THEMES[index].palette, index)
-  
-    const animationRef = useRef<any>(null)
-    const mainRef = useRef<HTMLElement | null>(null)
-  
-    const [isThemesModalOpen, setIsThemesModalOpen] = useState(false)
-    const [notes, setNotes] = useState<NoteType[]>([])
-    const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
-    const [isSaved, setIsSaved] = useState(true)
-    const [toggleSidebar, setToggleSidebar] = useState<boolean>(false)
-  
-  
-    const { data, isLoading, error, call} = useApi()
+  const user_id = localStorage.getItem("user_id") || ""
 
-    function getNotes() {
-      call({
-        method: 'GET',
-        url: `/note/user/67ec40019162541abba5edd3`,
-        data: {},
-        headers: {},
+  // Theme auto-update due to user's settings
+  const index = parseInt(localStorage.getItem('themeIndex') || '') || 0
+  themeHandler(THEMES[index].palette, index)
+
+  const animationRef = useRef<any>(null)
+  const mainRef = useRef<HTMLElement | null>(null)
+  const location = useLocation()
+
+  const [isThemesModalOpen, setIsThemesModalOpen] = useState(false)
+  const [notes, setNotes] = useState<NoteType[]>([])
+  const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
+  const [toggleSidebar, setToggleSidebar] = useState<boolean>(false)
+
+  const { data, isLoading, error, call } = useApi({
+    method: 'GET',
+    url: `/note/user/${user_id}`,
+    data: {},
+    headers: {},
+  })
+
+  function getNotes() {
+    call({
+      method: 'GET',
+      url: `/note/user/${user_id}`,
+      data: {},
+      headers: {},
+    }) 
+  }
+
+  useEffect(() => {
+    if(!user_id) navigate('/accounts/login')
+      
+    if(location.pathname === "/" || location.pathname === "/notes") {
+      getNotes()
+    }
+  }, [location])
+  
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      console.log(data);
+
+      animationRef.current = anime({
+        targets: '.sidebar-side',
+        opacity: [0, 1],
+        translateX: ['-100%', '0%'],
+        easing: 'easeInOutSine',
+        duration: 500,
+        delay: anime.stagger(50),
       })
       
+      updateNotes()
     }
-  
-    useEffect(() => {
-      if(data?.length > 0) {
-        console.log(data);
-        
-        setNotes(data)
-        setFilteredNotes(data)
-      }
-    }, [data])
-    
-  
-    useEffect(() => {
-      // const user_id = Number(localStorage.getItem('user_id')) || 0
-      // console.log(user_id);
-      
-      // if(!user_id) navigate('/accounts/login')
-      
-      getNotes()   
-  
-      if(notes) {
-        animationRef.current = anime({
-          targets: '.sidebar-side',
-          opacity: [0, 1],
-          translateX: ['-100%', '0%'],
-          easing: 'easeInOutSine',
-          duration: 500,
-          delay: anime.stagger(50),
-          
-        })
-  
-        console.log(notes);
-        
-      }
-  
-      if(notes.length <= 0) {
-        mainRef.current!.classList.remove('main-active')
-      }
-  
-    }, [])
-  
-    useEffect(() => {
-      if(toggleSidebar) {
-        mainRef.current!.classList.add('main-active')
-      }else {
-        mainRef.current!.classList.remove('main-active')
-      }
-    }, [toggleSidebar])
-    
-  
-    return (
-      <main
+
+    if (notes.length <= 0) {
+      mainRef.current!.classList.remove('main-active')
+    }
+  }, [data])
+
+  function updateNotes() {
+    setNotes(data)
+    setFilteredNotes(data)
+  }
+
+  useEffect(() => {
+    if (toggleSidebar) {
+      mainRef.current!.classList.toggle('main-active')
+    } else {
+      mainRef.current!.classList.remove('main-active')
+    }
+  }, [toggleSidebar])
+
+
+  if(isLoading) return <Loading />
+
+  return (
+    <main
       ref={mainRef}
       className="notes-main">
-        {
-          data?.length ? <Sidebar
+      <Sidebar
           setIsThemesModalOpen={setIsThemesModalOpen}
           setFilteredNotes={setFilteredNotes}
           filteredNotes={filteredNotes}
           originalNotes={data}
-          /> : null
-        }
-  
-        <Outlet 
-          context={[
-            setIsSaved,
-            isSaved,
-            getNotes,
-            toggleSidebar,
-            setToggleSidebar
-          ]}
         />
-  
-  
-      
-        {isThemesModalOpen && <ThemesModal setIsThemesModalOpen={setIsThemesModalOpen} />}
-      </main>
-    );
+
+      <Outlet
+        context={[
+          toggleSidebar,
+          setToggleSidebar,
+          updateNotes
+        ]}
+      />
+
+      {isThemesModalOpen && <ThemesModal setIsThemesModalOpen={setIsThemesModalOpen} />}
+    </main>
+  );
 }

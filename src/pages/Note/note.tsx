@@ -15,10 +15,6 @@ export default function Note(data: {
 
   const [title, setTitle] = useState(data.note.title)
 
-  function removeNote(id: string) {
-    
-  }
-
   useEffect(() => {
     setTitle(data.note.title)
   }, [data.note.title])

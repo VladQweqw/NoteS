@@ -12,16 +12,18 @@ export function NoteContent() {
 
   const [noteTitle, setNoteTitle] = useState<string>('')
   const [isTextWrap, setIsTextWrap] = useState(false)
+  const [isSaved, setIsSaved] = useState<boolean>(true)
 
   const { id } = useParams()
 
-  const [setIsSaved, isSaved, getNotes, toggleSidebar, setToggleSidebar]: any = useOutletContext();
-  
+  const [toggleSidebar, setToggleSidebar]: any = useOutletContext();
   const { data, isLoading, error, call} = useApi()
+
+  const user_id = localStorage.getItem("user_id") || ""
 
   useEffect(() => {
     call({
-      url: `/note/${id}?user_id=67ec40019162541abba5edd3`,
+      url: `/note/${id}?user_id=${user_id}`,
       data: {},
       headers: {},
       method: 'GET'
