@@ -194,6 +194,11 @@ body {
   transition: 200ms ease-in-out;
 }
 
+@media screen and (min-width: 801px) {
+  .main-active {
+    transform: translateX(calc(max(-100%, -325px) - 0.75rem));
+  }
+}
 @media screen and (max-width: 800px) {
   .notes-main {
     grid-template-columns: 100vw 100vw;
@@ -282,7 +287,7 @@ body {
   padding: 1rem;
   max-width: 900px;
   width: 100%;
-  height: 600px;
+  height: min(600px, 80%);
   overflow-y: auto;
   background-color: var(--background_contrast);
   border-radius: 8px;

@@ -7,14 +7,12 @@ import { motion } from "framer-motion";
 import Loading from "../../components/loading";
 import useApi from "../../hooks/useApi";
 
-import { useNavigate } from "react-router-dom";
 export function NoteContent() {
   const noteContent = useRef<HTMLPreElement | null>(null)
 
   const [noteTitle, setNoteTitle] = useState<string>('')
   const [isTextWrap, setIsTextWrap] = useState(false)
   const [isSaved, setIsSaved] = useState<boolean>(true)
-  const navigate = useNavigate();
 
   const { id } = useParams()
 
@@ -75,6 +73,9 @@ export function NoteContent() {
               <span 
               onClick={() => {
                 setToggleSidebar((toggleSidebar: boolean) => !toggleSidebar)
+                if(toggleSidebar) {
+                  saveNote()
+                }
               }}
               className="sidebar-toggle">
                 {!toggleSidebar ? 

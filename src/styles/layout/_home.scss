@@ -9,9 +9,11 @@
     
 }
 
-// .main-active {
-//     transform: translateX(calc(max(-100%, -325px) - .75rem));
-// }
+@media screen and (min-width: 801px) {
+    .main-active {
+        transform: translateX(calc(max(-100%, -325px) - .75rem));
+    }
+}
 
 
 @media screen and (max-width: 800px) {
