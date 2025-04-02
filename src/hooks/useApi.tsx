@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios'
 import { useEffect, useState } from 'react'
 
-const endpoint = 'http://192.168.1.169:1605/api'
+const endpoint = 'https://notes.vladpoienariu.xyz/api'
+// const endpoint = 'http://192.168.1.169:1605/api'
 
 const basic_auth = {
     username: "vlad",
