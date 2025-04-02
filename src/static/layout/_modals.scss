@@ -1,0 +1,227 @@
+.modal-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, .7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    animation: fadeIn 400ms ease-in-out;
+
+}
+
+.themes-modal {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 900px;
+    width: 100%;
+    height: 600px;
+    overflow-y: auto;
+    background-color: $background_contrast;
+    border-radius: 8px;
+    animation: jumpIn 400ms ease-in-out;
+
+    .themes-container {
+        display: grid;
+        grid-template-rows: 75px auto;
+        gap: 1rem;
+    }
+
+    .themes-title {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 2px solid $third_text;
+
+        h3 {
+            font-weight: 400;
+            font-size: 1.5rem;
+        }
+    }
+
+    .themes-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        grid-auto-rows: 75px;
+        height: 100%;
+        gap: 1rem;
+        overflow: hidden;
+
+        .theme {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 1rem;
+            justify-content: space-between;
+            border: 2px solid transparent;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: 200ms ease;
+            text-align: center;
+      
+
+            .theme-name {
+                color: $secondary_text;
+            }
+
+            .theme-name-active {
+                color: $text;
+            }
+
+            .color-palette {
+                display: flex;
+                gap: .5rem;
+                
+                .color {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 20px;
+                    border: 1px solid $third_text;
+                }
+            }
+        }
+
+        .theme:hover {
+            box-shadow: 0 4px 10px $background;
+        }
+
+        .theme-active {
+            box-shadow: 0 4px 10px $background;
+            border: 2px solid $third_text;
+
+        }
+    }
+
+    .user-wrapper {
+        display: block;
+        padding: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes jumpIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+        scale: 0;
+    }
+    to {
+        scale: 1;
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
+
+
+.context-menu {
+    position: absolute;
+    background-color: $background_contrast;
+    border-radius: 8px;
+    border: 1px solid $third_text;
+    overflow: hidden;
+    color: $text;
+    display: grid;
+    transition: 200ms ease;
+    pointer-events: none;
+    scale: 0;
+
+    .context-menu-item {
+        display: flex;
+        gap: .5rem 1rem;
+        justify-content: center;
+        align-items: center;
+        padding: .5rem;
+        cursor: pointer;
+        transition: 200ms ease;
+        color: $secondary_text;
+        border-bottom: 0.5px solid $third_text;
+
+        .delete-svg {
+            path {
+                stroke: rgb(185, 40, 40);
+            }
+        }
+    }
+    .context-menu-item:last-child {
+        border-bottom: none;
+    }
+
+    .context-menu-item:hover {
+        background-color: $background;
+        color: $text;
+    }
+
+}
+
+.context-menu-open {
+    pointer-events: all;
+    scale: 1;
+
+}
+.user-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    grid-auto-flow: dense;
+    width: 100%;
+    height: 100%;
+}
+
+.user-detail {
+    border: 1px solid $secondary_text;
+    text-align: center;
+    padding: .5rem 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+
+
+    .log-out {
+        background-color: rgb(185, 40, 40);
+        padding: .5rem 1rem;
+        border-radius: 4px;
+        color: $text;
+        cursor: pointer;
+        transition: 200ms ease;
+    }
+
+    .log-out:hover {
+        opacity: .9;
+    }
+
+    .log-out:active {
+        scale: .9;
+    }
+}
+
+.danger-detail {
+    border: 1px solid rgb(185, 40, 40);
+}
+
+@media (max-width: 550px) {
+    
+    .themes-modal .themes-wrapper {
+        grid-template-columns: auto;
+        
+        .theme .color-palette {
+        display: none;
+        }
+    }
+}

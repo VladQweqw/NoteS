@@ -1,0 +1,16 @@
+// components
+@import './base/_variables.scss';
+@import './base/_base.scss';
+
+// components
+// @import './components/';
+
+// layout
+@import './layout/components';
+@import './layout/home';
+@import './layout/buttons';
+@import './layout/modals';
+@import './layout/note_content';
+@import './layout/sidebar';
+@import './layout/form';
+@import './base/medias';

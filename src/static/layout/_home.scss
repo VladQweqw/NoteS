@@ -1,0 +1,17 @@
+.notes-main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: min(100%, 325px) auto;
+    gap: 1rem;
+    padding: 0;
+    transition: 200ms ease-in-out;
+    
+}
+
+.main-active {
+    transform: translateX(calc(max(-100%, -325px) - .75rem));
+}
+
+
+
