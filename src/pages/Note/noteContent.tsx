@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useOutletContext } from "react-router-dom" ;
-import { COLORS, scale } from "../../assets/data";
+import { scale } from "../../assets/data";
 import { useParams } from "react-router-dom";
 import NoteNotFound from "./noteNotFound";
 import { motion } from "framer-motion";
@@ -9,28 +9,49 @@ import useApi from "../../hooks/useApi";
 
 export function NoteContent() {
   const noteContent = useRef<HTMLPreElement | null>(null)
+
   const [noteTitle, setNoteTitle] = useState<string>('')
   const [isTextWrap, setIsTextWrap] = useState(false)
 
   const { id } = useParams()
 
-  const [colorsIndex, setColorsIndex, setIsSaved, isSaved, getNotes, toggleSidebar, setToggleSidebar]: any = useOutletContext();
+  const [setIsSaved, isSaved, getNotes, toggleSidebar, setToggleSidebar]: any = useOutletContext();
   
-  const { data, isLoading, error} = useApi({
-    url: `/notes/67ec40019162541abba5edd3?user_id=67ec40019162541abba5edd3`,
-    data: {},
-    headers: {},
-    method: 'GET'
-  })
+  const { data, isLoading, error, call} = useApi()
 
   useEffect(() => {
+    call({
+      url: `/note/${id}?user_id=67ec40019162541abba5edd3`,
+      data: {},
+      headers: {},
+      method: 'GET'
+    })
+  }, [id])
+  
+  useEffect(() => {
+    if(data?.id) {
+      console.log(data);
 
+      noteContent.current!.innerText = data.content
+      setNoteTitle(
+        data.title
+      )
+    }
   }, [data])
   
 
-
   function saveNote() {
-   
+    call({
+      url: `/note/${id}?user_id=67ec40019162541abba5edd3`,
+      data: {
+        title: noteTitle || "",
+        content: noteContent.current?.innerText || ""
+      },
+      headers: {},
+      method: 'PUT'
+    })
+
+    setIsSaved(true)
   }
     
   if(isLoading) return <Loading />
@@ -38,7 +59,7 @@ export function NoteContent() {
 
   if(data) {    
     return (<article   
-      onBlur={() => saveNote()}  
+      // onBlur={() => saveNote()}  
       className={`${toggleSidebar ? "note-conte-wrapper-active": ""} note-content-wrapper`}>
           <header className="note-content-header">
             <motion.div
@@ -86,20 +107,6 @@ export function NoteContent() {
             </motion.div>
     
             <div className="header-options">  
-                <div className="text-colors">
-                  {COLORS.map((color, index) => {
-                    return <span 
-                    className={` ${colorsIndex === index ? 'color-item-active': ''} color-item`}
-                    style={{backgroundColor: color}} 
-                    key={index} 
-                    
-                    onClick={(e) => {
-                      setColorsIndex(index)
-                    }}
-                    ></span>
-                  })}
-                </div>
-    
                 {
                   isTextWrap ? <svg onClick={() => setIsTextWrap(false)} className='svg' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_7_14260)">
@@ -135,10 +142,7 @@ export function NoteContent() {
           animate="visible"
           initial="hidden"
             ref={noteContent}
-            dangerouslySetInnerHTML={{__html: "a"}}
-            onClick={() => {
-              document.execCommand('foreColor', false, COLORS[colorsIndex])
-            }}
+            
             onKeyDown={(e) => {
               setIsSaved(false)
               if(e.ctrlKey && e.key.toLowerCase() === 's') {
@@ -150,7 +154,7 @@ export function NoteContent() {
             
             contentEditable={true}
           >
-          
+            {}
           </motion.pre>
           
           <div 
@@ -173,8 +177,7 @@ export function NoteContent() {
             </svg>
           </div>
       </article>)
-  }else {
-    return <h1>Error</h1>
   }
 
+  return <NoteNotFound />
 }

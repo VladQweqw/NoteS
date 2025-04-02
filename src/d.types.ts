@@ -15,11 +15,12 @@ type themeType = {
 }
 
 type NoteType = {
-    id: number,
+    id: string,
     title: string,
     content: string,
     lastUpdate: string,
-    creationDate: string
+    creationDate: string,
+    author: string,
 }
 
 type ContextDataType = {

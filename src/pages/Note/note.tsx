@@ -7,16 +7,17 @@ export default function Note(data: {
   isActive: boolean,
   setContextData: (args0: any) => void,
   setIsContextOpen: (args0: boolean) => void,
-  removeNote: (args0: number) => void,
   class: string,
   index: number
 }) {
   const navigate = useNavigate()
-
   const note = useRef<any>(null)
 
   const [title, setTitle] = useState(data.note.title)
-  const [lastModified, setLastModified] = useState(convertTimeDifference(data.note.creationDate, data.note.lastUpdate))
+
+  function removeNote(id: string) {
+    
+  }
 
   useEffect(() => {
     setTitle(data.note.title)
@@ -25,6 +26,11 @@ export default function Note(data: {
   return(
         <div
       ref={note}
+
+      onClick={(e) => {
+        navigate(`/notes/${data.note.id}`)
+      }} 
+
       onContextMenu={(e) => {
         const rect = note.current.getBoundingClientRect()
         
@@ -37,38 +43,21 @@ export default function Note(data: {
 
         data.setIsContextOpen(true)
       }}
-      onKeyDown={(e) => {
-        if(e.key === 'Delete') {
-            data.removeNote(data.note.id)
-        }
-      }}
-      onMouseEnter={(e) => {
-        setLastModified(convertTimeDifference(data.note.creationDate, data.note.lastUpdate))
-      }}
-      onClick={(e) => {
-        navigate(`/notes/${data.note.id}`)
-      }} 
       className={`note ${data.isActive ? 'note-active': '' }`}>
-        <p 
         
-        className="note-last-update">Edited {lastModified}</p>
+        <p className="note-last-update">Edited {convertTimeDifference(data.note.creationDate, data.note.lastUpdate)}</p>
 
         <input 
           onDoubleClick={(e: any) => {
             if(e.target.hasAttribute('readonly')) {
               e.target.removeAttribute('readonly')
-
-
             }else {
               e.target.setAttribute('readonly', 'true');
             }
           }}
-
           onBlur={(e) => {
             e.target.setAttribute('readonly', 'true');
-          
           }}
-
           onChange={(e) => {
             setTitle(e.target.value)
           }}

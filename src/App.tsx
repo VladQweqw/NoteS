@@ -12,7 +12,7 @@ import Page404 from './components/404page';
 
 import { NoteContent } from './pages/Note/noteContent';
 
-import './static/style.css'
+import './styles/style.css'
 
 
 function App() {

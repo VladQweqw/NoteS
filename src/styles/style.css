@@ -751,7 +751,7 @@ body {
   font-weight: 300;
   font-size: 0.75rem;
   opacity: 0;
-  transition: 400ms ease-in-out;
+  transition: 200ms ease-in-out;
   transform: translate(-50%, -50%);
 }
 .sidebar .notes .note .note-name {
