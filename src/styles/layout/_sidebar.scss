@@ -101,6 +101,7 @@
             text-align: center;
             cursor: pointer;
             position: relative;
+            transition: 200ms ease;
             overflow: hidden;
 
             .note-last-update {

@@ -1,23 +1,27 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Loading from "../../../components/loading"
 import useApi from "../../../hooks/useApi"
 import { useNavigate } from "react-router";
+import { getNewName } from "../../../assets/functions";
 
 export default function TopSidebar(props: {
   searchNotes: (args0: string) => void,
   sortNotes: () => void,
-  sortedAscdending: boolean
+  sortedAscdending: boolean,
+  setToggleSidebar: (args0:boolean) => void,
+  toggleSidebar: boolean,
+  originalNotes: NoteType[]
 }) {
   const navigate = useNavigate();
   const user_id = localStorage.getItem("user_id") || ""
-
-  const { data, isLoading, error, call } = useApi()
+  
+  const { data, isLoading, error, call } = useApi()  
 
   function createNote() {
     call({
       url: `/note`,
       data: {
-        title: "Untitled",
+        title: getNewName(props.originalNotes),
         content: "",
         author: user_id
       },
@@ -25,6 +29,7 @@ export default function TopSidebar(props: {
       method: 'POST'
     })
   }
+  
 
   useEffect(() => {
     if (data?.id) {
@@ -63,8 +68,8 @@ export default function TopSidebar(props: {
         <span onClick={() => {
         }} className="filter">
           <span
-          onClick={() => createNote()}
-          className="create-note" id='create-note'>
+            onClick={() => createNote()}
+            className="create-note" id='create-note'>
             <svg className='svg' viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_11_14244)">
                 <path d="M17.4167 3.5V8.16667C17.4167 8.47609 17.544 8.77283 17.7706 8.99162C17.9972 9.21042 18.3045 9.33333 18.625 9.33333H23.4583" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -80,6 +85,36 @@ export default function TopSidebar(props: {
             </svg>
           </span>
         </span>
+
+        {window.innerWidth <= 800 ?
+          <span onClick={() => {
+            props.setToggleSidebar(!props.toggleSidebar)
+            
+          }}>
+            {props.toggleSidebar ? 
+            <svg width="25" height="25" className="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_111_6)">
+                <path d="M9 18L15 12L9 6V18Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </g>
+              <defs>
+                <clipPath id="clip0_111_6">
+                  <rect width="25" height="25" fill="white" />
+                </clipPath>
+              </defs>
+            </svg> :
+              <svg width="24" height="24" className="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_111_5)">
+                  <path d="M15 6L9 12L15 18L15 6Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+                <defs>
+                  <clipPath id="clip0_111_5">
+                    <rect width="24" height="24" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>}
+          </span>
+          : null
+        }
       </div>
 
     </div>

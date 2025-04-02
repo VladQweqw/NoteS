@@ -8,6 +8,8 @@ export default function Sidebar(props: {
    setFilteredNotes: (args0: any) => void,
    filteredNotes: NoteType[],
    originalNotes: NoteType[],
+   setToggleSidebar: (args0:boolean) => void,
+   toggleSidebar: boolean,
    setIsThemesModalOpen: (args0: boolean) => void
 }) {
 
@@ -63,6 +65,9 @@ export default function Sidebar(props: {
             searchNotes={searchNotes}
             sortNotes={sortNotes}
             sortedAscdending={sortedAscdending}
+            originalNotes={props.originalNotes}
+            setToggleSidebar={props.setToggleSidebar}
+            toggleSidebar={props.toggleSidebar}
          />
 
          <MiddleSidebar 

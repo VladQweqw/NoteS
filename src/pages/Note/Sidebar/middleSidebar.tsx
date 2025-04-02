@@ -4,6 +4,7 @@ import useApi from "../../../hooks/useApi"
 import { useEffect } from "react"
 import { useNavigate } from "react-router"
 import Loading from "../../../components/loading"
+import { getNewName } from "../../../assets/functions"
 
 export default function MiddleSidebar(props: {
     setFilteredNotes: (args0: any) => void,
@@ -22,7 +23,7 @@ export default function MiddleSidebar(props: {
         call({
             url: `/note`,
             data: {
-                title: "Untitled",
+                title: getNewName(props.originalNotes),
                 content: "",
                 author: user_id
             },

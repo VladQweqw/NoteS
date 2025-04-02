@@ -101,6 +101,8 @@ export default function NotesPage() {
           setFilteredNotes={setFilteredNotes}
           filteredNotes={filteredNotes}
           originalNotes={data}
+          setToggleSidebar={setToggleSidebar}
+          toggleSidebar={toggleSidebar}
         />
 
       <Outlet

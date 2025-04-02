@@ -188,16 +188,25 @@ body {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: min(100%, 325px) auto;
+  grid-template-columns: min(100%, min(350px, 100%)) auto;
   gap: 1rem;
   padding: 0;
   transition: 200ms ease-in-out;
 }
 
-.main-active {
-  transform: translateX(calc(max(-100%, -325px) - 0.75rem));
+@media screen and (max-width: 800px) {
+  .notes-main {
+    grid-template-columns: 100vw 100vw;
+    overflow: hidden;
+    width: 100vw;
+  }
+  .main-active .sidebar {
+    transform: translateX(calc(-100% - 1rem));
+  }
+  .main-active .note-content-wrapper {
+    transform: translateX(calc(-100% - 1rem));
+  }
 }
-
 /* The switch - the box around the slider */
 .switch {
   font-size: 13px;
@@ -513,6 +522,7 @@ body {
   font-family: "Open Sans", sans-serif;
   outline: none;
   font-size: 1.125rem;
+  padding: 0.5rem;
   overflow: hidden;
   overflow-y: auto;
 }
@@ -741,6 +751,7 @@ body {
   text-align: center;
   cursor: pointer;
   position: relative;
+  transition: 200ms ease;
   overflow: hidden;
 }
 .sidebar .notes .note .note-last-update {
