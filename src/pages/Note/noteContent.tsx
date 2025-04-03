@@ -44,7 +44,7 @@ export function NoteContent() {
 
   function saveNote() {
     call({
-      url: `/note/${id}?user_id=67ec40019162541abba5edd3`,
+      url: `/note/${id}?user_id=${user_id}`,
       data: {
         title: noteTitle || "",
         content: noteContent.current?.innerText || ""
