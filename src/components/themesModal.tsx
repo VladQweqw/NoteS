@@ -1,5 +1,5 @@
 import { convertTimeFormat, themeHandler } from '../assets/functions'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import ModalWrapper from './modalWrapper'
 import { THEMES } from '../assets/data'
@@ -100,6 +100,8 @@ function AccountDetails() {
             headers: {},
             method: 'DELETE'
         })
+
+        logOut();
     }
 
     if (error) return <div className='d-flex full-h full-w flex-center' style={{
